@@ -1,0 +1,32 @@
+.ui.grid.errorpage-container {
+  min-height: 100vh;
+  margin: 0;
+  color: white;
+  background-blend-mode: multiply, multiply;
+  background: linear-gradient(to right, #240b36, #c31432);
+  background-color: #FF3CAC;
+
+  .container {
+    margin-top: 10rem;
+  }
+
+  .error-image {
+
+    img {
+      width: 30%;
+    }
+  }
+
+  .header {
+    color: white;
+    margin-bottom: 0;
+    font-weight: 500;
+  }
+
+  .order-button {
+    background-blend-mode: multiply;
+    background-color: #FF3CAC;
+    background-image: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+    color: white;
+  }
+}

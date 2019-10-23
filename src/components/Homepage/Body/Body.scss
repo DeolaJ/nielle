@@ -1,0 +1,13 @@
+.mainbody {
+  min-height: 100vh;
+  left: 0;
+  background-color: #333;
+  color: white;
+  background-blend-mode: multiply, multiply;
+  background: linear-gradient(to right, #240b36, #c31432);
+  background-color: #FF3CAC;
+
+  > .ui.grid {
+    margin: 0;
+  }
+}

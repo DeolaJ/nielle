@@ -1,0 +1,28 @@
+.ui.inverted.vertical.menu.sidebar-menu {
+  display: flex;
+
+  a.item {
+    cursor: pointer;
+    text-align: left;
+    padding-left: 2em;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    text-transform: uppercase;
+
+    i.chevron.right.icon {
+      margin-right: 0 !important;
+    }
+
+    &.active {
+      font-weight: 700;
+    }
+  }
+
+  div.item:first-child {
+    padding-top: 2.5em;
+    margin-top: auto;
+    padding-bottom: 2em;
+  }
+}

@@ -1,0 +1,21 @@
+.ui.grid.loader-grid {
+  position: fixed;
+  height: 100vh;
+  width: 100%;
+  left: 0;
+  margin: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, .4);
+  padding: 3rem;
+  padding-top: 0;
+
+  .loader.sixteen.column {
+
+    .ui.segment {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 100vh;
+    }
+  }
+}

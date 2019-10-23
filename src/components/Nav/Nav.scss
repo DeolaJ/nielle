@@ -1,0 +1,89 @@
+@import '../../partials/variables';
+
+.nav {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  padding: 2em 4em;
+  text-align: right;
+  transition: all 0.3s ease-in-out;
+  z-index: 3;
+  background-color: transparent;
+
+  .ui.list.link {
+    
+    a.item {
+      color: white !important;
+      font-weight: 500;
+      padding: 11px;
+
+      &.active {
+        font-weight: 800;
+      }
+    }
+  }
+
+  
+
+  .ui.mobile-navitems {
+
+    .big.icon {
+      cursor: pointer;
+      color: white;
+    }
+
+    .mobile-logo {
+      position: absolute;
+      transform: translate(-50%, -44%);
+    }
+  }
+
+  &.fixed-nav {
+    position: fixed;
+  }
+
+  .logo-link {
+    position: absolute;
+    left: 15px;
+    height: 100%;
+    width: 220px;
+    z-index: 2;
+  }
+
+  .logo {
+    position: absolute;
+    left: 20px;
+    z-index: -1;
+
+    .logo-icon {
+      width: 200px;
+      margin-left: 2rem;
+      margin-top: -6rem;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .nav {
+    padding: 30px 1em;
+    padding-right: 1em;
+    text-align: left;
+
+    .item {
+
+        a {
+        color: $color-secondary !important;
+        font-weight: 500;
+      }
+
+      &.active {
+
+        a {
+          font-weight: 800;
+        }
+      }
+    }
+    
+  }
+}

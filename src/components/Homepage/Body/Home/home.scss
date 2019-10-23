@@ -1,0 +1,140 @@
+@import '../../../../partials/variables';
+
+.home-container {
+  min-height: 100vh;
+
+  .illustration-banner {
+    right: -10%;
+    position: absolute;
+    left: unset;
+    width: 50vw;
+    height: 92vh;
+    top: 8vh;
+  }
+
+  .home-illustration {
+    height: 100%;
+    width: 83%;
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    background: no-repeat left top;
+    background-size: contain;
+  }
+
+  .home-icon img {
+    display: block;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .home-icon.mobile-only {
+    margin-top: 2em;
+  }
+
+  .ui.header {
+    font-size: 45px;
+    letter-spacing: .5px;
+    color: white;
+  }
+
+  .home-content-container {
+    margin-top: 100%; 
+    height: 50%;
+    padding-left: 5rem;
+    margin-bottom: 4rem;
+
+    .header {
+
+      div.Typist {
+        font-family: $font-family-header;
+        margin-top: -30px;
+      }
+
+      &:not(.mobile-only) {
+
+        &::after {
+          content: '';
+          display: block;
+          width: 24px;
+          height: 4px;
+          background: #fff;
+          margin-top: 16px;
+        }
+      }
+    }
+
+    .header-content p {
+      font-size: 18px;
+      line-height: 1.5em;
+      margin: 2em 0 1.5em;
+    }
+  }
+
+  @media (min-width: 769px) {
+    
+    .home-content-container {
+      margin-top: 32vh;
+    }
+  }
+
+  @media (max-width: 768px) {
+
+    background-position: right center;
+    background-size: 67%;
+    background-repeat: no-repeat;
+    background-color: rgba(0, 0, 0, .55);
+    background-blend-mode: overlay;
+    
+    .home-content-container {
+      margin-top: 30vh;
+      height: auto;
+      padding-left: 0;
+      margin-bottom: 2rem;
+    }
+  }
+
+  .back-to-top {
+    display: inline-block;
+    text-align: center;
+    background-color: rgb(130, 130, 130);
+    color: white;
+    height: 30px;
+    width: 30px;
+    position: fixed;
+    border-radius: 50%;
+    bottom: 50px;
+    left: 50%;
+    animation: bounce 0.8s linear;
+    animation-fill-mode: backwards;
+    animation-iteration-count: infinite;
+    backface-visibility: hidden;
+
+    i {
+      line-height: 30px;
+      margin-top: 3px;
+      margin-left: 5px;
+    }
+  }
+
+  @keyframes bounce {
+    0% {
+      transform: translateY(-1px);
+    }
+
+    50% {
+      transform: translateY(1px);
+    }
+
+    100% {
+      transform: translate(0);
+    }
+  }
+
+  .back-to-top:hover {
+    background-color: white;
+    border: 1px solid rgb(130, 130, 130);
+    color: rgb(130, 130, 130);
+  }
+}
