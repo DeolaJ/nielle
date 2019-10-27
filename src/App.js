@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './App.scss'
-import { BrowserRouter as Router, HashRouter, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, HashRouter, Switch, Route, Redirect } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Sidebar, Segment } from "semantic-ui-react"
 import Loadable from 'react-loadable';
@@ -11,6 +11,8 @@ import VerticalSidebar from './components/Sidebar/VerticalSidebar'
 import Homepage from './components/Homepage/homepage'
 import Contact from './components/Contact/contact'
 import OrderPage from './components/OrderPage/orderpage'
+import Welcome from './components/Welcome/welcome'
+import firebase from 'firebase'
 
 // const HomepageLoadable = Loadable({
 //   loader: () => import('./components/Homepage/homepage'),
@@ -93,6 +95,26 @@ class App extends Component {
         mobile: false
       })
     }
+
+    firebase.auth().onAuthStateChanged(FBUser => {
+      if(FBUser) {
+        this.setState({
+          user: FBUser,
+          userID: FBUser.uid
+        })
+      }
+    })
+  }
+
+  logOutUser = e => {
+    e.preventDefault();
+    this.setState({
+      user: null,
+      userID: null
+    })
+    firebase.auth().signOut().then(() => {
+      return <Redirect to="/welcome" />
+    })
   }
 
   changeActiveState = (e, { id }) => {
@@ -130,6 +152,7 @@ class App extends Component {
             <Sidebar.Pusher dimmed={dimmed && visible} onClick={ !visible ? null : this.handleSidebar} >
               <Switch>
                 <Route exact path={'/'} component={Homepage} />
+                <Route path={'/welcome'} component={Welcome} />
                 <Route path={'/contact'} component={Contact} />
                 {/* Order stands for payment now */}
                 <Route path={'/order'} component={OrderPage} /> 
