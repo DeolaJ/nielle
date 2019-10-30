@@ -56,8 +56,8 @@ class OrderPage extends PureComponent {
 
   render () {
 
-    const {  mobile } = this.state
-    const { db } = this.state
+    const {  mobile, db } = this.state
+    const { registerUser } = this.props
 
     return (
       <Grid className={'orderpage-container'}>
@@ -70,7 +70,7 @@ class OrderPage extends PureComponent {
               Order Form
             </Header>
             <br/>
-            <CheckoutForm db={db} mobile={mobile} unloadForm={this.unloadForm} />
+            <CheckoutForm db={db} mobile={mobile} unloadForm={this.unloadForm} registerUser={registerUser} />
 
           </Container>
 

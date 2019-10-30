@@ -17,7 +17,8 @@ class Login extends Component {
       response: null,
       loading: false,
       emailValid: false,
-      formValid: false
+      formValid: false,
+      redirectTrue: null
     }
 
     this.startLoading = this.endLoading.bind(this)
@@ -39,13 +40,12 @@ class Login extends Component {
         email: '',
         password: '',
         response: 'You are logged in'
+      }, () => {
+        setTimeout(
+          this.redirectWelcome,
+          500);
       })
 
-      setTimeout(
-        function () {
-          return <Redirect to="/welcome" />
-        },
-        500);
     } else if ( status === "fail" ) {
       setTimeout(() => (this.setState({ response: null })), 4000)
       this.setState({
@@ -91,6 +91,10 @@ class Login extends Component {
     });
   }
 
+  redirectWelcome = () => {
+    this.setState({ redirectTrue: true })
+  }
+
   signIn = (e) => {
     e.preventDefault();
     const { email, password, formValid } = this.state
@@ -128,7 +132,11 @@ class Login extends Component {
   }
 
   render () {
-    const { response, password, errorMessage, email, loading } = this.state
+    const { response, password, errorMessage, email, loading, redirectTrue } = this.state
+
+    if (redirectTrue) {
+      return <Redirect to="/welcome/newuser" />
+    }
 
     return (
       <Aux>

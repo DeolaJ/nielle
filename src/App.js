@@ -14,6 +14,7 @@ import OrderPage from './components/OrderPage/orderpage'
 import Welcome from './components/Welcome/welcome'
 import firebase from 'firebase'
 import ThankyouPage from './components/ThankyouPage/thankyoupage'
+import Aux from './hoc/Aux'
 
 // const HomepageLoadable = Loadable({
 //   loader: () => import('./components/Homepage/homepage'),
@@ -82,7 +83,7 @@ class App extends Component {
     userID: null,
     displayName: null,
     userInfo: null,
-    db: {},
+    db: {}
   }
 
   componentDidMount () {
@@ -90,6 +91,9 @@ class App extends Component {
     window.addEventListener("resize", this.updateValue)
     const url = window.location.href
     const db = firebase.firestore()
+    this.setState({
+      db
+    })
 
     this.setState(url.includes("contact") ? { activeitem: "contact"} : (url.includes("payment") ? { activeitem: "contact"} : { activeitem: "home"}))
 
@@ -109,23 +113,29 @@ class App extends Component {
           user: FBUser,
           userID: FBUser.uid,
           displayName: FBUser.displayName
-        }, () => {
-          db.collection(`userInfo/${FBUser.uid}`).get().then((snapshot) => {
-            var userInfo = snapshot.data();
-            this.setState({
-              userInfo: userInfo
-            })
-          });
         })
       }
     })
+  }
+
+  getUserInfo = () => {
+    const { db, userID } = this.state
+    db.collection("userInfo").doc(userID).get().then((snapshot) => {
+      var userInfo = snapshot.data();
+      console.log(snapshot)
+      this.setState({
+        userInfo: userInfo,
+        snapshot
+      })
+    });
   }
 
   logOutUser = e => {
     e.preventDefault();
     this.setState({
       user: null,
-      userID: null
+      userID: null,
+      displayName: null
     })
     firebase.auth().signOut().then(() => {
       return <Redirect to="/welcome" />
@@ -147,7 +157,7 @@ class App extends Component {
   handleSidebar = () =>
   this.setState(prevState => ({ visible: !prevState.visible, navVisible: !prevState.navVisible }))
 
-  registerUser = (userInfo) => {
+  registerUser = (userInfo, redirect) => {
     firebase.auth().onAuthStateChanged(FBUser => {
       FBUser.updateProfile({
         displayName: "false"
@@ -158,7 +168,7 @@ class App extends Component {
           userID: FBUser.uid,
           userInfo: userInfo
         }, () => {
-          return <Redirect to="/welcome/newuser" />
+          redirect()
         })
       })
     })
@@ -182,7 +192,7 @@ class App extends Component {
  
   render () {
     const { navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName } = this.state
-    
+    console.log(this.state)
     return (
       <div className={'body'}>
 
@@ -196,7 +206,15 @@ class App extends Component {
             <Sidebar.Pusher dimmed={dimmed && visible} onClick={ !visible ? null : this.handleSidebar} >
               <Switch>
                 <Homepage exact path={'/'} user={user} />
-                <Welcome path={'/welcome/:type'} user={user} userInfo={userInfo} userID={userID} displayName={displayName} />
+                {
+                  user &&
+
+                  <Aux>
+                    <Welcome path={'/welcome/:type'} user={user} userInfo={userInfo} userID={userID} displayName={displayName} />
+                    <Welcome path={'/welcome'} user={user} userInfo={userInfo} userID={userID} displayName={displayName} getUserInfo={this.getUserInfo} />
+                  </Aux>
+
+                }
                 <Contact path={'/contact'} user={user} />
                 {/* Order stands for payment now */}
                 <OrderPage path={'/order'} user={user} registerUser={this.registerUser} /> 

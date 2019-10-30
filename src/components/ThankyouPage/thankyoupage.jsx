@@ -16,8 +16,8 @@ class ThankyouPage extends Component {
   }
   
   componentDidMount () {
-    const { match } = this.props
-    const { reference } = match.params
+    const { computedMatch } = this.props
+    const { reference } = computedMatch.params
     const { updateProfilePaid } = this.props
     var mobile = this.state.mobile;
     if (!mobile) {
@@ -46,7 +46,7 @@ class ThankyouPage extends Component {
           <Grid.Column width={16}>
             <Container textAlign='center' style={{ marginTop: '20%' }}>
               {
-                success &&
+                success ?
 
                 <Aux>
                   <Header as="h2">
@@ -60,12 +60,24 @@ class ThankyouPage extends Component {
                     Return to <Link to="/welcome">dashboard</Link> to view your ticket
                   </Container>
                 </Aux>
+
+                : 
+
+                <Aux>
+                  <Header as="h2">
+                    There was an error with your payment, and it was not processed
+                  </Header>
+
+                  <Container>
+                    Please return to <Link to="/welcome">dashboard</Link> to try again
+                  </Container>
+                </Aux>
+
               }
             </Container>
           </Grid.Column>
         </Grid>
 
-        <Footer />
       </Aux>
     )
   }

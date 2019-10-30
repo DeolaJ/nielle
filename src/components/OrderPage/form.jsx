@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import { Form, Button, Container, Transition, TextArea, Message } from 'semantic-ui-react'
 // import FileUploader from 'react-firebase-file-uploader';
+import { Redirect } from 'react-router-dom'
 import Aux from '../../hoc/Aux'
 import firebase from '../../firebase'
 import Loader from '../Loader/loader'
@@ -21,7 +22,8 @@ class CheckoutForm extends Component {
       response: null,
       loading: false,
       emailValid: false,
-      formValid: false
+      formValid: false,
+      redirectTrue: null
     }
 
     this.startLoading = this.endLoading.bind(this)
@@ -83,10 +85,14 @@ class CheckoutForm extends Component {
     });
   }
 
+  redirectWelcome = () => {
+    this.setState({ redirectTrue: true })
+  }
+
   orderNow = (e) => {
     e.preventDefault();
-    const { email, password, username, full_name, description, address, gender, number, formValid } = this.state
-    const { registerUser } = this.props
+    const { email, password, username, full_name, description, gender, number, formValid } = this.state
+    const { registerUser, unloadForm } = this.props
     let timestamp = Date();
     timestamp = timestamp.toString();
     if (formValid === false) {
@@ -99,16 +105,16 @@ class CheckoutForm extends Component {
         email,
         password
       ).then(() => {
+        unloadForm();
         registerUser({
           email: email,
           username: username,
           name: full_name,
           description: description,
-          address: address,
           gender: gender,
           number: number,
           timestamp: timestamp
-        })
+        }, this.redirectWelcome)
       }).catch(error => {
         this.setState({
           status: "fail",
@@ -123,13 +129,18 @@ class CheckoutForm extends Component {
 
   render () {
     const { gender, response, password, errorMessage, username,
-      email, full_name, description, number, loading
+      email, full_name, description, number, loading, redirectTrue
     } = this.state
     
     const genders = [
       { key: 'm', text: 'Male', value: 'Male' },
       { key: 'f', text: 'Female', value: 'Female' }
     ]
+
+    console.log(this.state)
+    if (redirectTrue) {
+      return <Redirect to="/welcome/newuser" />
+    }
 
     return (
       <Aux>

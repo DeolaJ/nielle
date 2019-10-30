@@ -15,13 +15,13 @@ class Welcome extends Component {
       db: {},
       loading: false,
       newUser: false,
-      tickets: null
+      tickets: ""
     }
   }
   
   componentDidMount () {
-    const { match } = this.props
-    const { type } = match.params
+    const { computedMatch } = this.props
+    const { type } = computedMatch.params
     const db = firebase.firestore()
     
     this.setState({
@@ -29,6 +29,8 @@ class Welcome extends Component {
     }, () => {
       if (type === "newuser") {
         this.setNewUser()
+      } else {
+        this.props.getUserInfo()
       }
     })
   }
@@ -59,13 +61,12 @@ class Welcome extends Component {
   setNewUser = () => {
     const { userID, userInfo } = this.props
     const { db } = this.state
-    const { email, full_name, description, address, gender, number, timestamp } = userInfo
+    const { email, name, description, gender, number, timestamp } = userInfo
     this.startLoading();
     db.collection("userInfo").doc(userID).set({
       "email": email,
-      "name": full_name,
+      "full name": name,
       "description": description,
-      "address": address,
       "gender": gender,
       "number": number,
       "timestamp": timestamp
@@ -134,7 +135,7 @@ class Welcome extends Component {
   }
 
   render () {
-    const { user, logOutUser, displayName } = this.props
+    const { user, logOutUser, displayName, userInfo } = this.props
     const { tickets } = this.state
     var price = tickets && Number(tickets)*1000
 
@@ -194,8 +195,6 @@ class Welcome extends Component {
             </Container>
           </Grid.Column>
         </Grid>
-
-        <Footer />
       </Aux>
     )
   }
