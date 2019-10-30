@@ -1,33 +1,142 @@
 import React, {Component} from 'react'
-import { Grid, Container, Header, Button } from 'semantic-ui-react'
+import { Grid, Container, Header, Button, Dropdown, Form } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import './welcome.scss'
 import Footer from '../Footer/Footer'
 import Aux from '../../hoc/Aux'
+import firebase from '../../firebase'
+import axios from 'axios'
 
 class Welcome extends Component {
 
   constructor (props) {
     super (props)
     this.state = {
-      userName: null
+      db: {},
+      loading: false,
+      newUser: false,
+      tickets: null
     }
   }
   
   componentDidMount () {
-    var mobile = this.state.mobile;
-    if (!mobile) {
-      const body = document.querySelector('.welcome-container').clientWidth
-      mobile = body <= 768 ? true : false
+    const { match } = this.props
+    const { type } = match.params
+    const db = firebase.firestore()
+    
+    this.setState({
+      db: db
+    }, () => {
+      if (type === "newuser") {
+        this.setNewUser()
+      }
+    })
+  }
+
+  startLoading = () => {
+    this.setState({
+      loading: true
+    })
+  }
+  
+  endLoading = () => {
+    const { status } = this.state;
+    if (status === "success") {
       this.setState({
-        mobile: mobile
+        loading: false,
+        newUser: true,
+        response: 'Your account was created successfully'
+      })
+    } else if ( status === "fail" ) {
+      this.setState({
+        response: 'Network error, Please wait while we try again. Do not refresh your browser'
+      }, () => {
+        this.setNewUser()
       })
     }
+  }
 
+  setNewUser = () => {
+    const { userID, userInfo } = this.props
+    const { db } = this.state
+    const { email, full_name, description, address, gender, number, timestamp } = userInfo
+    this.startLoading();
+    db.collection("userInfo").doc(userID).set({
+      "email": email,
+      "name": full_name,
+      "description": description,
+      "address": address,
+      "gender": gender,
+      "number": number,
+      "timestamp": timestamp
+    }).then(() => {
+      console.log("Document successfully written!");
+      this.setState({
+        status: "success"
+      }, () => {
+        setTimeout(this.endLoading(), 500);
+      })
+    })
+    .catch((error) => {
+      console.error("Error writing document: ", error);
+      this.setState({
+        status: "fail",
+        errorMessage: error.message != null ? error.message : null
+      }, () => {
+        setTimeout(this.endLoading(), 500);
+      })
+    })
+  }
+
+  getReference = (full_name) => {
+    let text = full_name;
+    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.=";
+
+    for( let i=0; i < 15; i++ )
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+  }
+
+  payNow = () => {
+    const { tickets } = this.state
+    const { email, full_name, timestamp } = this.props.userInfo
+    var price = tickets && Number(tickets) * 1000
+    const ref = this.getReference(full_name);
+
+    if (typeof tickets) {
+      return axios.post('/flutterwave-initialize',
+        {
+          "email": email,
+          "amount": price,
+          "currency": "NGN",
+          "reference": ref,
+          "callback_url": "/verify",
+          "metadata": {
+            "custom_fields": [
+              {
+                "full_name": full_name,
+                "timestamp": timestamp
+              }
+            ]
+          }
+        }).then(response => {
+        console.log(response)
+        // return <Redirect to={response.url} />
+      }).catch(error => {
+        console.log(error);
+      })
+    }
+  }
+
+  handleChange = (e, { name, value }) => {
+    this.setState({ [name]: value })
   }
 
   render () {
-    const { user, userID, logOutUser } = this.props
+    const { user, logOutUser, displayName } = this.props
+    const { tickets } = this.state
+    var price = tickets && Number(tickets)*1000
 
     return (
       <Aux>
@@ -42,11 +151,36 @@ class Welcome extends Component {
                     Welcome, <Button onClick={logOutUser}>Logout</Button>
                   </Header>
 
-                  <Header as="h3">
-                    Pay
+                  <br/><br/>
+                  {
+                    displayName === "false" ?
 
-                    <br/><br/>
-                    </Header>
+                    <Aux>
+                      <Header as="h3">
+                        <div>How many tickets will you like to pay for?</div>
+                      </Header>
+                      <Form>
+                        <Form.Field>
+                          <Form.Input type="number" value={tickets} name="tickets" label={price} placeholder='Enter a number' onChange={this.handleChange}/>
+                        </Form.Field>
+                        <Button onClick={this.payNow}>Proceed to pay</Button>
+                      </Form>
+                    </Aux>
+
+                    :
+
+                    <Aux>
+                      <Header as="h3">
+                        Get ready to have a great time this December at the event. 
+                        Hope you have the following items ready.
+                      </Header>
+                      <Container>
+                        <div>
+                          To view your ticket, click here
+                        </div>
+                      </Container>
+                    </Aux>
+                  }
                 </Aux>
 
                 :

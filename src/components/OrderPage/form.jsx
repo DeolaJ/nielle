@@ -13,8 +13,8 @@ class CheckoutForm extends Component {
       email: '',
       password: '',
       full_name: '',
-      description: '', 
-      tickets: '',
+      description: '',
+      username: '',
       gender: '',
       number: '',
       errorMessage: null,
@@ -37,27 +37,8 @@ class CheckoutForm extends Component {
   
   endLoading = () => {
     const { status } = this.state;
-    // console.log("status inside end loading:" + status)
-    if (status === "success") {
-      this.setState({
-        loading: false,
-        email: '',
-        password: '',
-        full_name: '',
-        gender: '',
-        tickets: '',
-        address: '',
-        description: '',
-        number: '',
-        response: 'Your order was made successfully'
-      })
-
-      setTimeout(
-        function () {
-          document.location.href = '/#/thankyou/order'
-        },
-        500);
-    } else if ( status === "fail" ) {
+    
+    if ( status === "fail" ) {
       setTimeout(() => (this.setState({ response: null })), 4000)
       this.setState({
         loading: false,
@@ -95,17 +76,6 @@ class CheckoutForm extends Component {
     }, this.validateForm);
   }
 
-  getReference = () => {
-    const { full_name } = this.state;
-    let text = full_name;
-    let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-.=";
-
-    for( let i=0; i < 15; i++ )
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-    return text;
-  }
-  
   validateForm = () => {
 
     this.setState({
@@ -113,93 +83,49 @@ class CheckoutForm extends Component {
     });
   }
 
-  // writeToFirestore = () => {
-  //   const { db, unloadForm } = this.props;
-  //   const { email, full_name, description, address, gender, size, number, timestamp, ref } = this.state;
-  //   console.log(db, ref);
-  //   db.collection("order").doc(ref).set({
-  //     "email": email,
-  //     "name": full_name,
-  //     "description": description,
-  //     "address": address,
-  //     "size": size,
-  //     "gender": gender,
-  //     "number": number,
-  //     "timestamp": timestamp
-  //   }).then(() => {
-  //     this.endLoading();
-  //     unloadForm();
-  //     console.log("Document successfully written!");
-  //   })
-  //   .catch((error) => {
-  //     console.error("Error writing document: ", error);
-  //   });
-  // }
-
   orderNow = (e) => {
     e.preventDefault();
-    const { email, password, full_name, description, address, gender, tickets, number, formValid } = this.state
+    const { email, password, username, full_name, description, address, gender, number, formValid } = this.state
+    const { registerUser } = this.props
     let timestamp = Date();
-    var ref = this.getReference();
     timestamp = timestamp.toString();
     if (formValid === false) {
       document.getElementById("email").focus()
     }
 
     if (formValid === true) {
-      let status;
       this.startLoading();
-      const { db, unloadForm } = this.props;
       firebase.auth().createUserWithEmailAndPassword(
         email,
         password
-      ).catch(error => {
-        if (error.message != null) {
-          this.setState({errorMessage: error.message})
-        } else {
-          this.setState({errorMessage: null})
-        }
-      }
-
-      )
-      db.collection("order").doc(ref).set({
-        "email": email,
-        "name": full_name,
-        "description": description,
-        "address": address,
-        "tickets": tickets,
-        "gender": gender,
-        "number": number,
-        "timestamp": timestamp
-      }).then(() => {
-        console.log("Document successfully written!");
-        status = "success";
-        this.setState({
-          status: status,
-          timestamp: timestamp,
-          ref: ref
+      ).then(() => {
+        registerUser({
+          email: email,
+          username: username,
+          name: full_name,
+          description: description,
+          address: address,
+          gender: gender,
+          number: number,
+          timestamp: timestamp
         })
-        setTimeout(this.endLoading(), 500);
-        unloadForm();
-      })
-      .catch((error) => {
-        console.error("Error writing document: ", error);
-        status = "fail";
+      }).catch(error => {
         this.setState({
-          status: status
+          status: "fail",
+          errorMessage: error.message != null ? error.message : null
+        }, () => {
+          setTimeout(this.endLoading(), 500);
         })
-        setTimeout(this.endLoading(), 500);
       })
+      
     }
   }
 
   render () {
-    const { gender, response, password, errorMessage,
-      email, full_name, description, tickets, number, loading
+    const { gender, response, password, errorMessage, username,
+      email, full_name, description, number, loading
     } = this.state
-
-    // const key="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",
-
+    
     const genders = [
       { key: 'm', text: 'Male', value: 'Male' },
       { key: 'f', text: 'Female', value: 'Female' }
@@ -228,9 +154,9 @@ class CheckoutForm extends Component {
             <p>Email address is invalid</p>
           </Message>
 
+          <Form.Input width={16} type="text" required label={"Username"} value={username} name="username" placeholder='Choose a username' onChange={this.handleChange} />
           <Form.Input type="password" id={'password'} required label={"Password (to pay or view your tickets later)"} value={password} name="password" placeholder='Create a password' onChange={this.handleChange} />
           <Form.Input type="number" id={'number'} required label={"Phone number"} value={number} name="number" placeholder='+234 - - - - - - - - - -' onChange={this.handleChange} />
-          <Form.Input type="number" id={'tickets'} relabel={"Number of tickets"} value={tickets} name="tickets" placeholder='How many tickets?' onChange={this.handleChange} />
           <Form.Select options={genders} label={"Gender (OPTIONAL)"} value={gender} name="gender" placeholder='Select Gender' onChange={this.handleChange} />
           <Form.Field>
             <label htmlFor={"description"}>Brief Description (OPTIONAL)</label>
@@ -252,7 +178,7 @@ class CheckoutForm extends Component {
         {
           loading && 
 
-          <Loader loading={loading} message={"Processing order"} />
+          <Loader loading={loading} message={"Processing request"} />
         }
 
       </Aux>

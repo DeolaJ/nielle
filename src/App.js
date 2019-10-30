@@ -13,6 +13,7 @@ import Contact from './components/Contact/contact'
 import OrderPage from './components/OrderPage/orderpage'
 import Welcome from './components/Welcome/welcome'
 import firebase from 'firebase'
+import ThankyouPage from './components/ThankyouPage/thankyoupage'
 
 // const HomepageLoadable = Loadable({
 //   loader: () => import('./components/Homepage/homepage'),
@@ -76,13 +77,19 @@ class App extends Component {
     dimmed: true,
     visible: false,
     navVisible: true,
-    activeitem: ""
+    activeitem: "",
+    user: null,
+    userID: null,
+    displayName: null,
+    userInfo: null,
+    db: {},
   }
 
   componentDidMount () {
     const body = document.querySelector('body').clientWidth
     window.addEventListener("resize", this.updateValue)
     const url = window.location.href
+    const db = firebase.firestore()
 
     this.setState(url.includes("contact") ? { activeitem: "contact"} : (url.includes("payment") ? { activeitem: "contact"} : { activeitem: "home"}))
 
@@ -100,7 +107,15 @@ class App extends Component {
       if(FBUser) {
         this.setState({
           user: FBUser,
-          userID: FBUser.uid
+          userID: FBUser.uid,
+          displayName: FBUser.displayName
+        }, () => {
+          db.collection(`userInfo/${FBUser.uid}`).get().then((snapshot) => {
+            var userInfo = snapshot.data();
+            this.setState({
+              userInfo: userInfo
+            })
+          });
         })
       }
     })
@@ -132,17 +147,46 @@ class App extends Component {
   handleSidebar = () =>
   this.setState(prevState => ({ visible: !prevState.visible, navVisible: !prevState.navVisible }))
 
+  registerUser = (userInfo) => {
+    firebase.auth().onAuthStateChanged(FBUser => {
+      FBUser.updateProfile({
+        displayName: "false"
+      }).then(() => {
+        this.setState({
+          user: FBUser,
+          displayName: FBUser.displayName,
+          userID: FBUser.uid,
+          userInfo: userInfo
+        }, () => {
+          return <Redirect to="/welcome/newuser" />
+        })
+      })
+    })
+  }
+
+  updateProfilePaid = () => {
+    firebase.auth().updateCurrentUser(FBUser => {
+      FBUser.updateProfile({
+        displayName: "true"
+      }).then(() => {
+        this.setState({
+          displayName: FBUser.displayName
+        })
+      })
+    })
+  }
+
   componentWillUnmount () {
     window.removeEventListener("resize", this.updateValue)
   }
  
   render () {
-    const { navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible } = this.state
+    const { navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName } = this.state
     
     return (
       <div className={'body'}>
 
-        <HashRouter basename={'/'}>
+        <Router basename={'/'}>
 
           <Nav navItems={navItems} activeitem={activeitem} mobile={mobile} handleSidebar={this.handleSidebar} changeActiveState={this.changeActiveState} navVisible={navVisible} />
 
@@ -151,20 +195,20 @@ class App extends Component {
 
             <Sidebar.Pusher dimmed={dimmed && visible} onClick={ !visible ? null : this.handleSidebar} >
               <Switch>
-                <Route exact path={'/'} component={Homepage} />
-                <Route path={'/welcome'} component={Welcome} />
-                <Route path={'/contact'} component={Contact} />
+                <Homepage exact path={'/'} user={user} />
+                <Welcome path={'/welcome/:type'} user={user} userInfo={userInfo} userID={userID} displayName={displayName} />
+                <Contact path={'/contact'} user={user} />
                 {/* Order stands for payment now */}
-                <Route path={'/order'} component={OrderPage} /> 
+                <OrderPage path={'/order'} user={user} registerUser={this.registerUser} /> 
                 <Route path={'/trackorders'} component={OrdersLoadable} />
-                <Route path={'/thankyou/:reference'} component={ThankyouLoadable} />
+                <ThankyouPage path={'/thankyou/:reference'} updateProfilePaid={this.updateProfilePaid} />
                 <Route component={ErrorLoadable} />
               </Switch>
             </Sidebar.Pusher>
           </Sidebar.Pushable>
           
           <Footer/>
-        </HashRouter>
+        </Router>
 
       </div>
     )

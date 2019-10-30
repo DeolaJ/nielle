@@ -170,7 +170,7 @@ class Login extends Component {
         {
           loading && 
 
-          <Loader loading={loading} message={"Processing order"} />
+          <Loader loading={loading} message={"Logging in"} />
         }
 
       </Aux>
