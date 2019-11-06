@@ -1,12 +1,16 @@
 import React, {Component} from 'react'
 import { Grid, Button, List, Container, Header } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import './errorpage.scss'
 import errorIcon from '../../images/logowhiteboxmedium.png'
 
 class ErrorPage extends Component {
 
   render () {
+    const { loggedIn } = this.props
+    if (loggedIn === false) {
+      return <Redirect to="/" />
+    }
 
     return (
       <Grid className={'errorpage-container'}>

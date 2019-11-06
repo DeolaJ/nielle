@@ -1,8 +1,10 @@
 import React, { PureComponent } from 'react'
 import { Grid, Container, Header } from 'semantic-ui-react'
+import { Link, Redirect } from 'react-router-dom'
 import './orderpage.scss'
 import CheckoutForm from './form'
 import firebase from '../../firebase'
+import Aux from '../../hoc/Aux'
 
 class OrderPage extends PureComponent {
 
@@ -57,7 +59,11 @@ class OrderPage extends PureComponent {
   render () {
 
     const {  mobile, db } = this.state
-    const { registerUser } = this.props
+    const { registerUser, loggedIn } = this.props
+
+    if (loggedIn === false) {
+      return <Redirect to="/" />
+    }
 
     return (
       <Grid className={'orderpage-container'}>
@@ -65,12 +71,25 @@ class OrderPage extends PureComponent {
         <Grid.Column width={16}>
 
           <Container className={'checkout-form'}>
+            {
+              loggedIn ? 
 
-            <Header as="h2" className={"section-title"} textAlign="center">
-              Order Form
-            </Header>
-            <br/>
-            <CheckoutForm db={db} mobile={mobile} unloadForm={this.unloadForm} registerUser={registerUser} />
+              <div>
+                <p>
+                  Please proceed to your <Link to="/welcome">Dashboard</Link>
+                </p>
+              </div>
+
+              :
+
+              <Aux>
+                  <Header as="h2" className={"section-title"} textAlign="center">
+                    Order Form
+                  </Header>
+                  <br/>
+                  <CheckoutForm db={db} mobile={mobile} unloadForm={this.unloadForm} registerUser={registerUser} />
+              </Aux>
+            }
 
           </Container>
 

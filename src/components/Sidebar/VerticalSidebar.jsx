@@ -8,7 +8,7 @@ class VerticalSidebar extends Component {
 
   render () {
 
-    const { animation, direction, visible, handleSidebar, navItems, changeActiveState, activeitem, loggedIn, logOutUser} = this.props 
+    const { animation, direction, visible, navItems, handleSidebar, changeActiveState, activeitem, loggedIn, logOutUser} = this.props 
 
     return (
       <Sidebar
@@ -28,16 +28,22 @@ class VerticalSidebar extends Component {
           </Menu.Item>
           {
             navItems.map(item => (
-              <Menu.Item key={item.id} as={Link} to={item.link} active={activeitem === item.id}
-                onClick={changeActiveState, handleSidebar}>
+              <Menu.Item key={item.id} as={Link} to={item.link} className={'mobile-menu'} active={activeitem === item.id}
+                onClick={changeActiveState}>
                 {item.name}
               </Menu.Item>
             ))
           }
+          {
+            loggedIn &&
+            <Menu.Item as={Link} to='/welcome' id={'dashboard'} onClick={changeActiveState} className={'mobile-menu'} active={activeitem === 'dashboard'}>
+              Dashboard
+            </Menu.Item>
+          }
 
           <Menu.Item as='div'>
             <Link to='/order'>
-              <Button className={'primary-main'} id="order" onClick={changeActiveState, handleSidebar}>
+              <Button className={'primary-main mobile-menu'} id="order" onClick={changeActiveState}>
                 Get a Ticket
               </Button>
             </Link>
@@ -46,14 +52,14 @@ class VerticalSidebar extends Component {
             loggedIn ?
 
             <Menu.Item as='div'>
-              <Button className={'primary-main'} onClick={logOutUser}>Logout</Button>
+              <Button className={'primary-main mobile-menu'} onClick={logOutUser}>Logout</Button>
             </Menu.Item>
 
             :
 
-            <Menu.Item as='div'>
+            <Menu.Item as='div' active={activeitem === 'login'}>
               <Link to='/login'>
-                <Button className={'primary-main'}>Login</Button>
+                <Button className={'primary-main mobile-menu'} id={'login'} onClick={changeActiveState}>Login</Button>
               </Link>
             </Menu.Item>
           }

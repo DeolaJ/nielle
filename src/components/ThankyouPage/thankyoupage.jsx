@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
 import { Grid, Container, Header } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import './thankyoupage.scss'
-import Footer from '../Footer/Footer'
 import Aux from '../../hoc/Aux'
 
 class ThankyouPage extends Component {
@@ -16,9 +15,9 @@ class ThankyouPage extends Component {
   }
   
   componentDidMount () {
-    const { computedMatch } = this.props
-    const { reference } = computedMatch.params
-    const { updateProfilePaid } = this.props
+    const { match } = this.props
+    const { reference } = match.params
+    // const { updateProfilePaid } = this.props
     var mobile = this.state.mobile;
     if (!mobile) {
       const body = document.querySelector('.thankyoupage-container').clientWidth
@@ -32,13 +31,18 @@ class ThankyouPage extends Component {
       success: (reference === 'thank-you') ? true : false,
     }, () => {
       if (reference === "thank-you") {
-        updateProfilePaid()
+        // updateProfilePaid()
       }
     })
   }
 
   render () {
     const { success } = this.state
+    const { loggedIn } = this.props
+
+    if (loggedIn === false) {
+      return <Redirect to="/" />
+    }
 
     return (
       <Aux>

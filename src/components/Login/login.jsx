@@ -43,7 +43,7 @@ class Login extends Component {
         response: 'You are logged in'
       }, () => {
         setTimeout(
-          this.redirectWelcome,
+          this.redirectWelcome(),
           500);
       })
 
@@ -134,8 +134,9 @@ class Login extends Component {
 
   render () {
     const { response, password, errorMessage, email, loading, redirectTrue } = this.state
+    const { user } = this.props
 
-    if (redirectTrue) {
+    if (redirectTrue && user) {
       return <Redirect to="/welcome" />
     }
 

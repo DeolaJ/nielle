@@ -34,6 +34,12 @@ class Nav extends Component {
                   </List.Item>
                 ))
               }
+              {
+                loggedIn &&
+                <List.Item as={Link} to='/welcome' id={'dashboard'} onClick={changeActiveState} active={activeitem === 'dashboard'}>
+                  Dashboard
+                </List.Item>
+              }
               <List.Item>
                 <Link to='/order'>
                   <Button className={'primary-main'} id="order" onClick={changeActiveState}>Get a Ticket</Button>
@@ -44,7 +50,7 @@ class Nav extends Component {
 
                 <List.Item>
                   <Button className={'primary-main'} onClick={logOutUser}>Logout</Button>
-              </List.Item>
+                </List.Item>
 
                 :
 

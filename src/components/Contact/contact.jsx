@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import { Grid, Header, Container, Form, Button, Transition, Message, TextArea } from 'semantic-ui-react'
+import { Redirect } from 'react-router-dom'
 import './contact.scss'
 import firebase from '../../firebase'
 import Loader from '../Loader/loader'
@@ -180,6 +181,11 @@ class Contact extends Component {
   render () {
 
     const { email, full_name, message, loading, response } = this.state;
+    const { loggedIn } = this.props
+
+    if (loggedIn === false) {
+      return <Redirect to="/" />
+    }
 
     return (
       <Grid stackable className={'contact-container'}>

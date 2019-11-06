@@ -1,8 +1,7 @@
 import React, {Component} from 'react'
 import { Grid, Container, Header, Button, Dropdown, Form } from 'semantic-ui-react'
-import { Link, Redirect, matchPatch } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import './welcome.scss'
-import Footer from '../Footer/Footer'
 import Aux from '../../hoc/Aux'
 import firebase from '../../firebase'
 import axios from 'axios'
@@ -140,6 +139,7 @@ class Welcome extends Component {
     var price = tickets && Number(tickets)*1000
 
     console.log(this.state, this.props)
+    
     if (loggedIn === false) {
       return <Redirect to="/" />
     }

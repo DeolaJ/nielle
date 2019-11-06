@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './App.scss'
-import { BrowserRouter as Router, HashRouter, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Sidebar, Segment } from "semantic-ui-react"
 import Loadable from 'react-loadable';
@@ -159,6 +159,10 @@ class App extends Component {
     delete localStorage.nielleUser
   }
 
+  removeLoggedIn = () => {
+    this.setState({ loggedIn: null })
+  }
+
   logOutUser = e => {
     e.preventDefault();
     this.setState({
@@ -169,15 +173,21 @@ class App extends Component {
     }, () => {
       this.removeLocalStorage()
     })
+
     firebase.auth().signOut().then(() => {
       this.setState({ 
         loggedIn: false
+      }, () => {
+        this.removeLoggedIn()
       })
     })
   }
 
-  changeActiveState = (e, { id }) => {
-    this.setState({ activeitem: id })
+  changeActiveState = (e, { id, className }) => {
+    this.setState({ activeitem: id }, () => {
+      console.log(className)
+      className.includes('mobile-menu') && this.handleSidebar()
+    })
   }
 
   updateValue = () => {
@@ -188,8 +198,7 @@ class App extends Component {
     })
   }
 
-  handleSidebar = () =>
-  this.setState(prevState => ({ visible: !prevState.visible, navVisible: !prevState.navVisible }))
+  handleSidebar = () => this.setState(prevState => ({ visible: !prevState.visible, navVisible: !prevState.navVisible }))
 
   registerUser = (userInfo, redirectfunc) => {
     firebase.auth().onAuthStateChanged(FBUser => {
@@ -229,6 +238,7 @@ class App extends Component {
   render () {
     const { navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName, loggedIn } = this.state
     console.log(this.state)
+
     return (
       <div className={'body'}>
 
@@ -241,22 +251,17 @@ class App extends Component {
 
             <Sidebar.Pusher dimmed={dimmed && visible} onClick={ !visible ? null : this.handleSidebar} >
               <Switch>
-                <Route exact path={'/'} render={(props) => <Homepage {...props} user={user}/>} />
-                {
-                  user &&
-
-                  <Aux>
-                    <Route exact path={'/welcome/:type'} render={(props) => <Welcome {...props} user={user} userInfo={userInfo} userID={userID} displayName={displayName} loggedIn={loggedIn} getUserInfo={this.getUserInfo} logOutUser={this.logOutUser} />} />
-                    <Route exact path={'/welcome'} render={(props) => <Welcome {...props} user={user} userInfo={userInfo} userID={userID} displayName={displayName} getUserInfo={this.getUserInfo} loggedIn={loggedIn} logOutUser={this.logOutUser} />} />
-                  </Aux>
-
-                }
-                <Route exact path={'/login'} render={(props) => <Login {...props} user={user} loggedIn={loggedIn} />} />
-                <Route exact path={'/contact'} render={(props) => <Contact {...props} user={user} />} />
-                <Route exact path={'/order'} render={(props) => <OrderPage {...props} user={user} registerUser={this.registerUser} />} />
-                <Route exact path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} updateProfilePaid={this.updateProfilePaid} />} />
-                <Route path={'/trackorders'} component={OrdersLoadable} />
-                <Route component={ErrorLoadable} />
+                <Route exact path={'/'} render={(props) => <Homepage {...props} user={user} loggedIn={loggedIn} />} />
+                
+                
+                <Route path={'/login'} render={(props) => <Login {...props} user={user} loggedIn={loggedIn} />} />
+                <Route path={'/contact'} render={(props) => <Contact {...props} user={user} loggedIn={loggedIn} />} />
+                <Route path={'/order'} render={(props) => <OrderPage {...props} registerUser={this.registerUser} loggedIn={loggedIn} />} />
+                <Route path={'/welcome/:type'} render={(props) => <Welcome {...props} user={user} userInfo={userInfo} userID={userID} displayName={displayName} getUserInfo={this.getUserInfo} logOutUser={this.logOutUser} loggedIn={loggedIn} />} />
+                <Route path={'/welcome'} render={(props) => <Welcome {...props} user={user} userInfo={userInfo} userID={userID} displayName={displayName} getUserInfo={this.getUserInfo} loggedIn={loggedIn} logOutUser={this.logOutUser} />} />
+                <Route path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} updateProfilePaid={this.updateProfilePaid} loggedIn={loggedIn} />} />
+                <Route path={'/trackorders'} component={OrdersLoadable} loggedIn={loggedIn} />
+                <Route component={ErrorLoadable} loggedIn={loggedIn} />
               </Switch>
             </Sidebar.Pusher>
           </Sidebar.Pushable>
