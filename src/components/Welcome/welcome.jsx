@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import { Grid, Container, Header, Button, Dropdown, Form } from 'semantic-ui-react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect, matchPatch } from 'react-router-dom'
 import './welcome.scss'
 import Footer from '../Footer/Footer'
 import Aux from '../../hoc/Aux'
@@ -20,8 +20,8 @@ class Welcome extends Component {
   }
   
   componentDidMount () {
-    const { computedMatch } = this.props
-    const { type } = computedMatch.params
+    const { match } = this.props
+    const { type } = match.params
     const db = firebase.firestore()
     
     this.setState({
@@ -135,9 +135,14 @@ class Welcome extends Component {
   }
 
   render () {
-    const { user, logOutUser, displayName, userInfo } = this.props
+    const { user, logOutUser, displayName, userInfo, loggedIn } = this.props
     const { tickets } = this.state
     var price = tickets && Number(tickets)*1000
+
+    console.log(this.state, this.props)
+    if (loggedIn === false) {
+      return <Redirect to="/" />
+    }
 
     return (
       <Aux>

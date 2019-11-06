@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import { Form, Button, Container, Transition, Message } from 'semantic-ui-react'
+import { Grid, Header, Form, Button, Container, Transition, Message } from 'semantic-ui-react'
 // import FileUploader from 'react-firebase-file-uploader';
 import { Redirect } from 'react-router-dom'
 import Aux from '../../hoc/Aux'
 import firebase from '../../firebase'
 import Loader from '../Loader/loader'
+import './login.scss'
 
 class Login extends Component {
 
@@ -135,36 +136,47 @@ class Login extends Component {
     const { response, password, errorMessage, email, loading, redirectTrue } = this.state
 
     if (redirectTrue) {
-      return <Redirect to="/welcome/newuser" />
+      return <Redirect to="/welcome" />
     }
 
     return (
       <Aux>
+        <Grid stackable className={'login-container'}>
+          <Grid.Column width={16}>
 
-        <Form>
-          {
-            errorMessage &&
-            <div>
-              <p>
-                {errorMessage}
-              </p>
+            <div className={"login-form"}>
+
+              <Header as="h2" textAlign="center">
+                Login
+              </Header>
+
+              <Form>
+            {
+              errorMessage &&
+              <div>
+                <p>
+                  {errorMessage}
+                </p>
+              </div>
+            }
+            
+            <Form.Input id={'email'} type="email" required label={"Email address"} value={email} name="email" placeholder='Enter your email address' onChange={this.handleChange} />
+            <Message
+              error
+              visible={(this.state.email.length > 0) && !this.state.emailValid}
+              size="small"
+            >
+              <p>Email address is invalid</p>
+            </Message>
+
+            <Form.Input type="password" id={'password'} required label={"Password"} value={password} name="password" placeholder='Enter your password' onChange={this.handleChange} />
+            
+            <Button type='submit' className={'sign-button primary-main'} floated="right" onClick={this.signIn}>Login</Button>
+          </Form>
+
             </div>
-          }
-          
-          <Form.Input id={'email'} type="email" required label={"Email address"} value={email} name="email" placeholder='Enter your email address' onChange={this.handleChange} />
-          <Message
-            error
-            visible={(this.state.email.length > 0) && !this.state.emailValid}
-            size="small"
-          >
-            <p>Email address is invalid</p>
-          </Message>
-
-          <Form.Input type="password" id={'password'} required label={"Password"} value={password} name="password" placeholder='Enter your password' onChange={this.handleChange} />
-          
-          <Button type='submit' className={'sign-button'} floated="right" onClick={this.signIn}>Login</Button>
-        </Form>
-
+          </Grid.Column>
+        </Grid>
         {
           response &&
 

@@ -27,7 +27,9 @@ class Home extends Component {
                 hideWhenDone: true,
                 hideWhenDoneDelay: 1000,
               }} avgTypingDelay={130}>
-                Clothing With Style
+                Nielle's Backyard Cookout 
+                <br/>
+                &amp; Movie Night
               </Typist>
             </Header>
 
@@ -39,23 +41,19 @@ class Home extends Component {
                 hideWhenDone: true,
                 hideWhenDoneDelay: 1000,
               }} avgTypingDelay={130}>
-                Clothing With Style
+                Nielle's Backyard Cookout &amp; Movie Night
               </Typist>
             </Header>
             <div className={'header-content'}>
               <p>
-                Get amazing plain tees, sweat pants, hoodies, 
-                <br/>
-                shorts and caps at amazing prices. 
-                <br/>
-                Incredible deliveries &amp; return policy.
+                Get ready for an amazing experience with food, drinks, games and friends
               </p>
             </div>
             <List horizontal>
               <List.Item>
                 <Link to='/order'>
                   <Button size='large' color='blue' className={'primary-main'}>
-                    Order now
+                    Get a Ticket
                   </Button>
                 </Link>
               </List.Item>

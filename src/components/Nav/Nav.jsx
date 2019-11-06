@@ -9,7 +9,7 @@ import logowhitesmall from '../../images/logowhitemedium.png'
 class Nav extends Component {
 
   render () {
-    const { navItems, mobile, changeActiveState, activeitem, handleSidebar, navVisible } = this.props
+    const { navItems, mobile, changeActiveState, activeitem, handleSidebar, navVisible, loggedIn, logOutUser } = this.props
 
     return (
       <nav className={'nav'} style={{ display: navVisible ? 'block' : 'none' }}>
@@ -36,9 +36,24 @@ class Nav extends Component {
               }
               <List.Item>
                 <Link to='/order'>
-                  <Button className={'primary-main'} id="order" onClick={changeActiveState}>Order now</Button>
+                  <Button className={'primary-main'} id="order" onClick={changeActiveState}>Get a Ticket</Button>
                 </Link>
               </List.Item>
+              {
+                loggedIn ?
+
+                <List.Item>
+                  <Button className={'primary-main'} onClick={logOutUser}>Logout</Button>
+              </List.Item>
+
+                :
+
+                <List.Item>
+                  <Link to='/login'>
+                    <Button className={'primary-main'}>Login</Button>
+                  </Link>
+                </List.Item>
+              }
             </List>
           </Aux>
 
@@ -57,7 +72,7 @@ class Nav extends Component {
               <Grid.Column textAlign='right'>
                 <Link to='/order'>
                   <Button className={'primary-main icon'} id="order" onClick={changeActiveState}>
-                    Order
+                    Buy Ticket
                   </Button>
                 </Link>
               </Grid.Column>

@@ -15,6 +15,7 @@ import Welcome from './components/Welcome/welcome'
 import firebase from 'firebase'
 import ThankyouPage from './components/ThankyouPage/thankyoupage'
 import Aux from './hoc/Aux'
+import Login from './components/Login/login'
 
 // const HomepageLoadable = Loadable({
 //   loader: () => import('./components/Homepage/homepage'),
@@ -83,6 +84,7 @@ class App extends Component {
     userID: null,
     displayName: null,
     userInfo: null,
+    loggedIn: null,
     db: {}
   }
 
@@ -107,12 +109,21 @@ class App extends Component {
       })
     }
 
+    if (localStorage.hasOwnProperty('nielleUser')) {
+      const { user, userID, userInfo, loggedIn, displayName } = JSON.parse(localStorage.getItem('nielleUser'))
+
+      this.setState({ user, userID, userInfo, loggedIn, displayName })
+    }
+
     firebase.auth().onAuthStateChanged(FBUser => {
       if(FBUser) {
         this.setState({
           user: FBUser,
           userID: FBUser.uid,
-          displayName: FBUser.displayName
+          displayName: FBUser.displayName,
+          loggedIn: true
+        }, () => {
+          this.setLocalStorage()
         })
       }
     })
@@ -126,8 +137,26 @@ class App extends Component {
       this.setState({
         userInfo: userInfo,
         snapshot
+      }, () => {
+        this.setLocalStorage()
       })
     });
+  }
+
+  setLocalStorage = () => {
+    const { user, userID, userInfo, displayName } = this.state
+
+    localStorage.setItem('nielleUser', JSON.stringify({
+      user: user,
+      userID: userID,
+      userInfo: userInfo,
+      loggedIn: true,
+      displayName: displayName
+    }))
+  }
+
+  removeLocalStorage = () => {
+    delete localStorage.nielleUser
   }
 
   logOutUser = e => {
@@ -135,10 +164,15 @@ class App extends Component {
     this.setState({
       user: null,
       userID: null,
-      displayName: null
+      displayName: null,
+      userInfo: null
+    }, () => {
+      this.removeLocalStorage()
     })
     firebase.auth().signOut().then(() => {
-      return <Redirect to="/welcome" />
+      this.setState({ 
+        loggedIn: false
+      })
     })
   }
 
@@ -157,7 +191,7 @@ class App extends Component {
   handleSidebar = () =>
   this.setState(prevState => ({ visible: !prevState.visible, navVisible: !prevState.navVisible }))
 
-  registerUser = (userInfo, redirect) => {
+  registerUser = (userInfo, redirectfunc) => {
     firebase.auth().onAuthStateChanged(FBUser => {
       FBUser.updateProfile({
         displayName: "false"
@@ -166,12 +200,14 @@ class App extends Component {
           user: FBUser,
           displayName: FBUser.displayName,
           userID: FBUser.uid,
+          loggedIn: true,
           userInfo: userInfo
         }, () => {
-          redirect()
+          this.setLocalStorage()
         })
       })
     })
+    redirectfunc()
   }
 
   updateProfilePaid = () => {
@@ -191,35 +227,35 @@ class App extends Component {
   }
  
   render () {
-    const { navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName } = this.state
+    const { navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName, loggedIn } = this.state
     console.log(this.state)
     return (
       <div className={'body'}>
 
         <Router basename={'/'}>
 
-          <Nav navItems={navItems} activeitem={activeitem} mobile={mobile} handleSidebar={this.handleSidebar} changeActiveState={this.changeActiveState} navVisible={navVisible} />
+          <Nav navItems={navItems} activeitem={activeitem} mobile={mobile} handleSidebar={this.handleSidebar} changeActiveState={this.changeActiveState} navVisible={navVisible} logOutUser={this.logOutUser} loggedIn={loggedIn} />
 
           <Sidebar.Pushable as={Segment} style={{margin: '0', border: 'none' }} >
-            <VerticalSidebar activeitem={activeitem} animation={animation} direction={direction} visible={visible} handleSidebar={this.handleSidebar}  changeActiveState={this.changeActiveState} navItems={navItems} />
+            <VerticalSidebar activeitem={activeitem} animation={animation} direction={direction} visible={visible} handleSidebar={this.handleSidebar}  changeActiveState={this.changeActiveState} navItems={navItems} logOutUser={this.logOutUser} loggedIn={loggedIn} />
 
             <Sidebar.Pusher dimmed={dimmed && visible} onClick={ !visible ? null : this.handleSidebar} >
               <Switch>
-                <Homepage exact path={'/'} user={user} />
+                <Route exact path={'/'} render={(props) => <Homepage {...props} user={user}/>} />
                 {
                   user &&
 
                   <Aux>
-                    <Welcome path={'/welcome/:type'} user={user} userInfo={userInfo} userID={userID} displayName={displayName} />
-                    <Welcome path={'/welcome'} user={user} userInfo={userInfo} userID={userID} displayName={displayName} getUserInfo={this.getUserInfo} />
+                    <Route exact path={'/welcome/:type'} render={(props) => <Welcome {...props} user={user} userInfo={userInfo} userID={userID} displayName={displayName} loggedIn={loggedIn} getUserInfo={this.getUserInfo} logOutUser={this.logOutUser} />} />
+                    <Route exact path={'/welcome'} render={(props) => <Welcome {...props} user={user} userInfo={userInfo} userID={userID} displayName={displayName} getUserInfo={this.getUserInfo} loggedIn={loggedIn} logOutUser={this.logOutUser} />} />
                   </Aux>
 
                 }
-                <Contact path={'/contact'} user={user} />
-                {/* Order stands for payment now */}
-                <OrderPage path={'/order'} user={user} registerUser={this.registerUser} /> 
+                <Route exact path={'/login'} render={(props) => <Login {...props} user={user} loggedIn={loggedIn} />} />
+                <Route exact path={'/contact'} render={(props) => <Contact {...props} user={user} />} />
+                <Route exact path={'/order'} render={(props) => <OrderPage {...props} user={user} registerUser={this.registerUser} />} />
+                <Route exact path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} updateProfilePaid={this.updateProfilePaid} />} />
                 <Route path={'/trackorders'} component={OrdersLoadable} />
-                <ThankyouPage path={'/thankyou/:reference'} updateProfilePaid={this.updateProfilePaid} />
                 <Route component={ErrorLoadable} />
               </Switch>
             </Sidebar.Pusher>

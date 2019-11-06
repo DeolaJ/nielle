@@ -138,6 +138,7 @@ class CheckoutForm extends Component {
     ]
 
     console.log(this.state)
+    
     if (redirectTrue) {
       return <Redirect to="/welcome/newuser" />
     }

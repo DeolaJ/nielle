@@ -8,7 +8,7 @@ class VerticalSidebar extends Component {
 
   render () {
 
-    const { animation, direction, visible, handleSidebar, navItems, changeActiveState, activeitem } = this.props 
+    const { animation, direction, visible, handleSidebar, navItems, changeActiveState, activeitem, loggedIn, logOutUser} = this.props 
 
     return (
       <Sidebar
@@ -38,10 +38,25 @@ class VerticalSidebar extends Component {
           <Menu.Item as='div'>
             <Link to='/order'>
               <Button className={'primary-main'} id="order" onClick={changeActiveState, handleSidebar}>
-                Order now
+                Get a Ticket
               </Button>
             </Link>
           </Menu.Item>
+          {
+            loggedIn ?
+
+            <Menu.Item as='div'>
+              <Button className={'primary-main'} onClick={logOutUser}>Logout</Button>
+            </Menu.Item>
+
+            :
+
+            <Menu.Item as='div'>
+              <Link to='/login'>
+                <Button className={'primary-main'}>Login</Button>
+              </Link>
+            </Menu.Item>
+          }
 
           <Menu.Item as='a' onClick={handleSidebar}> 
             Back
