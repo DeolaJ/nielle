@@ -59,7 +59,13 @@ class OrderPage extends PureComponent {
   render () {
 
     const {  mobile, db } = this.state
-    const { registerUser, loggedIn } = this.props
+    const { registerUser, loggedIn, registerDone } = this.props
+    console.log(registerDone)
+    console.log(this.props)
+
+    if (registerDone) {
+      return <Redirect to="/welcome/newuser" />
+    }
 
     if (loggedIn === false) {
       return <Redirect to="/" />

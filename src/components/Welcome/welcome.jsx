@@ -19,72 +19,19 @@ class Welcome extends Component {
   }
   
   componentDidMount () {
-    const { match } = this.props
+    const { match, registerRemove, getUserInfo } = this.props
     const { type } = match.params
     const db = firebase.firestore()
-    
+    console.log(type)
+
     this.setState({
       db: db
     }, () => {
       if (type === "newuser") {
-        this.setNewUser()
+        registerRemove()
       } else {
-        this.props.getUserInfo()
+        getUserInfo()
       }
-    })
-  }
-
-  startLoading = () => {
-    this.setState({
-      loading: true
-    })
-  }
-  
-  endLoading = () => {
-    const { status } = this.state;
-    if (status === "success") {
-      this.setState({
-        loading: false,
-        newUser: true,
-        response: 'Your account was created successfully'
-      })
-    } else if ( status === "fail" ) {
-      this.setState({
-        response: 'Network error, Please wait while we try again. Do not refresh your browser'
-      }, () => {
-        this.setNewUser()
-      })
-    }
-  }
-
-  setNewUser = () => {
-    const { userID, userInfo } = this.props
-    const { db } = this.state
-    const { email, name, description, gender, number, timestamp } = userInfo
-    this.startLoading();
-    db.collection("userInfo").doc(userID).set({
-      "email": email,
-      "full name": name,
-      "description": description,
-      "gender": gender,
-      "number": number,
-      "timestamp": timestamp
-    }).then(() => {
-      console.log("Document successfully written!");
-      this.setState({
-        status: "success"
-      }, () => {
-        setTimeout(this.endLoading(), 500);
-      })
-    })
-    .catch((error) => {
-      console.error("Error writing document: ", error);
-      this.setState({
-        status: "fail",
-        errorMessage: error.message != null ? error.message : null
-      }, () => {
-        setTimeout(this.endLoading(), 500);
-      })
     })
   }
 
@@ -138,7 +85,7 @@ class Welcome extends Component {
     const { tickets } = this.state
     var price = tickets && Number(tickets)*1000
 
-    console.log(this.state, this.props)
+    console.log(this.state)
     
     if (loggedIn === false) {
       return <Redirect to="/" />
@@ -148,13 +95,13 @@ class Welcome extends Component {
       <Aux>
         <Grid className={'welcome-container'}>
           <Grid.Column width={16}>
-            <Container textAlign='center' style={{ marginTop: '20%' }}>
+            <Container style={{ marginTop: '20%' }}>
               {
                 user ?
 
                 <Aux>
-                  <Header as="h2">
-                    Welcome, <Button onClick={logOutUser}>Logout</Button>
+                  <Header as="h2" textAlign="left">
+                    Welcome{' '}{userInfo && userInfo["full_name"]}
                   </Header>
 
                   <br/><br/>
@@ -162,14 +109,14 @@ class Welcome extends Component {
                     displayName === "false" ?
 
                     <Aux>
-                      <Header as="h3">
+                      <Header as="h3" textAlign="left">
                         <div>How many tickets will you like to pay for?</div>
                       </Header>
                       <Form>
                         <Form.Field>
-                          <Form.Input type="number" value={tickets} name="tickets" label={price} placeholder='Enter a number' onChange={this.handleChange}/>
+                          <Form.Input type="number" value={tickets} name="tickets" label={`N${price}`} placeholder='Enter a number' onChange={this.handleChange}/>
                         </Form.Field>
-                        <Button onClick={this.payNow}>Proceed to pay</Button>
+                        <Button className={'primary-main ticket-button'} onClick={this.payNow}>Proceed to pay</Button>
                       </Form>
                     </Aux>
 

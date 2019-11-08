@@ -1,7 +1,5 @@
 import React, {Component} from 'react'
 import { Form, Button, Container, Transition, TextArea, Message } from 'semantic-ui-react'
-// import FileUploader from 'react-firebase-file-uploader';
-import { Redirect } from 'react-router-dom'
 import Aux from '../../hoc/Aux'
 import firebase from '../../firebase'
 import Loader from '../Loader/loader'
@@ -22,8 +20,7 @@ class CheckoutForm extends Component {
       response: null,
       loading: false,
       emailValid: false,
-      formValid: false,
-      redirectTrue: null
+      formValid: false
     }
 
     this.startLoading = this.endLoading.bind(this)
@@ -85,10 +82,6 @@ class CheckoutForm extends Component {
     });
   }
 
-  redirectWelcome = () => {
-    this.setState({ redirectTrue: true })
-  }
-
   orderNow = (e) => {
     e.preventDefault();
     const { email, password, username, full_name, description, gender, number, formValid } = this.state
@@ -99,6 +92,16 @@ class CheckoutForm extends Component {
       document.getElementById("email").focus()
     }
 
+    const userInfo = {
+      email: email,
+      username: username,
+      full_name: full_name,
+      description: description,
+      gender: gender,
+      number: number,
+      timestamp: timestamp
+    }
+
     if (formValid === true) {
       this.startLoading();
       firebase.auth().createUserWithEmailAndPassword(
@@ -106,16 +109,9 @@ class CheckoutForm extends Component {
         password
       ).then(() => {
         unloadForm();
-        registerUser({
-          email: email,
-          username: username,
-          name: full_name,
-          description: description,
-          gender: gender,
-          number: number,
-          timestamp: timestamp
-        }, this.redirectWelcome)
-      }).catch(error => {
+        registerUser(userInfo)
+      })
+      .catch(error => {
         this.setState({
           status: "fail",
           errorMessage: error.message != null ? error.message : null
@@ -129,7 +125,7 @@ class CheckoutForm extends Component {
 
   render () {
     const { gender, response, password, errorMessage, username,
-      email, full_name, description, number, loading, redirectTrue
+      email, full_name, description, number, loading, 
     } = this.state
     
     const genders = [
@@ -137,19 +133,13 @@ class CheckoutForm extends Component {
       { key: 'f', text: 'Female', value: 'Female' }
     ]
 
-    console.log(this.state)
-    
-    if (redirectTrue) {
-      return <Redirect to="/welcome/newuser" />
-    }
-
     return (
       <Aux>
 
         <Form>
           {
             errorMessage &&
-            <div>
+            <div className={'error-message'}>
               <p>
                 {errorMessage}
               </p>

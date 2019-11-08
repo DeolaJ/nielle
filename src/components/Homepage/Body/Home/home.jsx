@@ -4,8 +4,13 @@ import './home.scss'
 import Typist from 'react-typist'
 import { Link } from 'react-router-dom'
 import homeIcon from '../../../../images/colorful.png'
+import axios from 'axios'
 
 class Home extends Component {
+
+  pay = () => {
+    return axios.post('/flutterwave-initialize')
+  }
 
   render () {
     const { mobile } = this.props
@@ -33,6 +38,7 @@ class Home extends Component {
               </Typist>
             </Header>
 
+            <Button size="huge" onClick={this.pay}>Pay now</Button>
             <Header as='h1' textAlign='center' className={'mobile-only'}>
               <Typist cursor={{
                 show: false,

@@ -134,7 +134,11 @@ class Login extends Component {
 
   render () {
     const { response, password, errorMessage, email, loading, redirectTrue } = this.state
-    const { user } = this.props
+    const { user, loggedIn } = this.props
+
+    if (loggedIn === false) {
+      return <Redirect to="/" />
+    }
 
     if (redirectTrue && user) {
       return <Redirect to="/welcome" />

@@ -6,10 +6,18 @@ module.exports = (app) => {
   app.post('/flutterwave-initialize', (req, res) => {
     console.log(req.body)
 
-    return fetch("https://api.flutterwave.co/transaction/initialize", {
+    return fetch("https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/hosted/pay", {
       method: 'POST',
-      body: JSON.stringify(req.body),
+      body: JSON.stringify({
+        "txref":"MC_15204435314ft",
+        "PBFPubKey":"FLWPUBK-a4ae5b0f2e5ae9f4b81527f3e1b64ae5-X", 
+        "customer_email": "adeola.adeyemoj@yahoo.com", 
+        "amount": 1000, 
+        "currency": "NGN", 
+        "redirect_url": "/verify/"
+      }),
       headers: {
+        "Content-Type": "application/json"
       }
     })
     .then(res => res.json())

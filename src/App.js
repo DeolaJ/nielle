@@ -85,7 +85,8 @@ class App extends Component {
     displayName: null,
     userInfo: null,
     loggedIn: null,
-    db: {}
+    db: {},
+    registerDone: null
   }
 
   componentDidMount () {
@@ -133,7 +134,7 @@ class App extends Component {
     const { db, userID } = this.state
     db.collection("userInfo").doc(userID).get().then((snapshot) => {
       var userInfo = snapshot.data();
-      console.log(snapshot)
+      console.log(userInfo)
       this.setState({
         userInfo: userInfo,
         snapshot
@@ -172,21 +173,18 @@ class App extends Component {
       userInfo: null
     }, () => {
       this.removeLocalStorage()
-    })
-
-    firebase.auth().signOut().then(() => {
-      this.setState({ 
-        loggedIn: false
-      }, () => {
-        this.removeLoggedIn()
+      firebase.auth().signOut().then(() => {
+        this.setState({ 
+          loggedIn: false
+        })
       })
     })
+
   }
 
   changeActiveState = (e, { id, className }) => {
     this.setState({ activeitem: id }, () => {
-      console.log(className)
-      className.includes('mobile-menu') && this.handleSidebar()
+      this.state.mobile && className.includes('mobile-menu') && this.handleSidebar()
     })
   }
 
@@ -200,11 +198,13 @@ class App extends Component {
 
   handleSidebar = () => this.setState(prevState => ({ visible: !prevState.visible, navVisible: !prevState.navVisible }))
 
-  registerUser = (userInfo, redirectfunc) => {
+  registerUser = (userInfo) => {
+    console.log(userInfo)
     firebase.auth().onAuthStateChanged(FBUser => {
       FBUser.updateProfile({
         displayName: "false"
-      }).then(() => {
+      })
+      .then(() => {
         this.setState({
           user: FBUser,
           displayName: FBUser.displayName,
@@ -214,9 +214,25 @@ class App extends Component {
         }, () => {
           this.setLocalStorage()
         })
+      }).then(() => {
+        console.log('yes')
+        const { db } = this.state
+        const { email, name, description, gender, number, timestamp } = userInfo
+        const doc = {
+          "email": email,
+          "full_name": name,
+          "description": description,
+          "gender": gender,
+          "number": number,
+          "timestamp": timestamp
+        }
+    
+        db.collection("userInfo").doc(FBUser.uid).set(doc).then(() => {
+          console.log("Document successfully written!")
+          this.setState({ registerDone: true })
+        });
       })
     })
-    redirectfunc()
   }
 
   updateProfilePaid = () => {
@@ -231,17 +247,54 @@ class App extends Component {
     })
   }
 
+  registerRemove = () => {
+    this.setState({ registerDone: null })
+  }
+
+  // startLoading = () => {
+  //   this.setState({
+  //     loading: true
+  //   })
+  // }
+  
+  // endLoading = () => {
+  //   const { status } = this.state;
+  //   if (status === "success") {
+  //     this.setState({
+  //       loading: false,
+  //       newUser: true,
+  //       response: 'Your account was created successfully'
+  //     })
+  //   } else if ( status === "fail" ) {
+  //     this.setState({
+  //       response: 'Network error, Please wait while we try again. Do not refresh your browser'
+  //     }, () => {
+  //       this.setNewUser()
+  //     })
+  //   }
+  // }
+
+  // setNewUser = () => {
+  //   console.log('yes')
+  //   const { userID, userInfo } = this.state
+    
+  // }
+
+  componentDidUpdate () {
+    const { loggedIn } = this.state
+    loggedIn === false && this.removeLoggedIn()
+  }
+
   componentWillUnmount () {
     window.removeEventListener("resize", this.updateValue)
   }
  
   render () {
-    const { navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName, loggedIn } = this.state
+    const { navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName, loggedIn, registerDone } = this.state
     console.log(this.state)
 
     return (
       <div className={'body'}>
-
         <Router basename={'/'}>
 
           <Nav navItems={navItems} activeitem={activeitem} mobile={mobile} handleSidebar={this.handleSidebar} changeActiveState={this.changeActiveState} navVisible={navVisible} logOutUser={this.logOutUser} loggedIn={loggedIn} />
@@ -256,9 +309,9 @@ class App extends Component {
                 
                 <Route path={'/login'} render={(props) => <Login {...props} user={user} loggedIn={loggedIn} />} />
                 <Route path={'/contact'} render={(props) => <Contact {...props} user={user} loggedIn={loggedIn} />} />
-                <Route path={'/order'} render={(props) => <OrderPage {...props} registerUser={this.registerUser} loggedIn={loggedIn} />} />
-                <Route path={'/welcome/:type'} render={(props) => <Welcome {...props} user={user} userInfo={userInfo} userID={userID} displayName={displayName} getUserInfo={this.getUserInfo} logOutUser={this.logOutUser} loggedIn={loggedIn} />} />
-                <Route path={'/welcome'} render={(props) => <Welcome {...props} user={user} userInfo={userInfo} userID={userID} displayName={displayName} getUserInfo={this.getUserInfo} loggedIn={loggedIn} logOutUser={this.logOutUser} />} />
+                <Route path={'/order'} render={(props) => <OrderPage {...props} registerUser={this.registerUser} loggedIn={loggedIn} registerDone={registerDone} />} />
+                <Route path={'/welcome/:type'} render={(props) => user ? <Welcome {...props} user={user} userInfo={userInfo} userID={userID} displayName={displayName} setNewUser={this.setNewUser} getUserInfo={this.getUserInfo} logOutUser={this.logOutUser} loggedIn={loggedIn} registerRemove={this.registerRemove} /> : <Login {...props} user={user} loggedIn={loggedIn} />} />
+                <Route path={'/welcome'} render={(props) => user ? <Welcome {...props} user={user} userInfo={userInfo} userID={userID} displayName={displayName} setNewUser={this.setNewUser} getUserInfo={this.getUserInfo} loggedIn={loggedIn} logOutUser={this.logOutUser} /> : <Login {...props} user={user} loggedIn={loggedIn} />} />
                 <Route path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} updateProfilePaid={this.updateProfilePaid} loggedIn={loggedIn} />} />
                 <Route path={'/trackorders'} component={OrdersLoadable} loggedIn={loggedIn} />
                 <Route component={ErrorLoadable} loggedIn={loggedIn} />
