@@ -95,7 +95,7 @@ class CheckoutForm extends Component {
     const userInfo = {
       email: email,
       username: username,
-      full_name: full_name,
+      name: full_name,
       description: description,
       gender: gender,
       number: number,

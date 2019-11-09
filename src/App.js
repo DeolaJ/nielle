@@ -220,7 +220,7 @@ class App extends Component {
         const { email, name, description, gender, number, timestamp } = userInfo
         const doc = {
           "email": email,
-          "full_name": name,
+          "name": name,
           "description": description,
           "gender": gender,
           "number": number,
@@ -249,6 +249,14 @@ class App extends Component {
 
   registerRemove = () => {
     this.setState({ registerDone: null })
+  }
+
+  setQr = (qrCode) => {
+    this.setState(prevState => ({
+      userInfo: {...prevState.userInfo, qrCode}
+    }), () => {
+      this.setLocalStorage()
+    })
   }
 
   // startLoading = () => {
@@ -293,6 +301,7 @@ class App extends Component {
     const { navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName, loggedIn, registerDone } = this.state
     console.log(this.state)
 
+    console.log(process.env.FIREBASE_CONFIG)
     return (
       <div className={'body'}>
         <Router basename={'/'}>
@@ -310,8 +319,26 @@ class App extends Component {
                 <Route path={'/login'} render={(props) => <Login {...props} user={user} loggedIn={loggedIn} />} />
                 <Route path={'/contact'} render={(props) => <Contact {...props} user={user} loggedIn={loggedIn} />} />
                 <Route path={'/order'} render={(props) => <OrderPage {...props} registerUser={this.registerUser} loggedIn={loggedIn} registerDone={registerDone} />} />
-                <Route path={'/welcome/:type'} render={(props) => user ? <Welcome {...props} user={user} userInfo={userInfo} userID={userID} displayName={displayName} setNewUser={this.setNewUser} getUserInfo={this.getUserInfo} logOutUser={this.logOutUser} loggedIn={loggedIn} registerRemove={this.registerRemove} /> : <Login {...props} user={user} loggedIn={loggedIn} />} />
-                <Route path={'/welcome'} render={(props) => user ? <Welcome {...props} user={user} userInfo={userInfo} userID={userID} displayName={displayName} setNewUser={this.setNewUser} getUserInfo={this.getUserInfo} loggedIn={loggedIn} logOutUser={this.logOutUser} /> : <Login {...props} user={user} loggedIn={loggedIn} />} />
+                
+                <Route path={'/welcome/:type'} render={(props) => user 
+                  ? 
+                    <Welcome {...props} user={user} userInfo={userInfo} 
+                    userID={userID} displayName={displayName} setNewUser={this.setNewUser} 
+                    getUserInfo={this.getUserInfo} logOutUser={this.logOutUser} setQr={this.setQr} 
+                    loggedIn={loggedIn} registerRemove={this.registerRemove} /> 
+                  : 
+                    <Login {...props} user={user} loggedIn={loggedIn} />} 
+                  />
+                
+                <Route path={'/welcome'} render={(props) => user 
+                  ? 
+                    <Welcome {...props} user={user} userInfo={userInfo} userID={userID} 
+                    displayName={displayName} setNewUser={this.setNewUser} setQr={this.setQr} 
+                    getUserInfo={this.getUserInfo} loggedIn={loggedIn} logOutUser={this.logOutUser} 
+                    registerRemove={this.registerRemove} /> 
+                  : 
+                    <Login {...props} user={user} loggedIn={loggedIn} />} 
+                  />
                 <Route path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} updateProfilePaid={this.updateProfilePaid} loggedIn={loggedIn} />} />
                 <Route path={'/trackorders'} component={OrdersLoadable} loggedIn={loggedIn} />
                 <Route component={ErrorLoadable} loggedIn={loggedIn} />

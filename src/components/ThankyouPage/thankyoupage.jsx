@@ -3,6 +3,7 @@ import { Grid, Container, Header } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import './thankyoupage.scss'
 import Aux from '../../hoc/Aux'
+import axios from 'axios'
 
 class ThankyouPage extends Component {
 
@@ -17,7 +18,7 @@ class ThankyouPage extends Component {
   componentDidMount () {
     const { match } = this.props
     const { reference } = match.params
-    // const { updateProfilePaid } = this.props
+    console.log(reference)
     var mobile = this.state.mobile;
     if (!mobile) {
       const body = document.querySelector('.thankyoupage-container').clientWidth
@@ -27,13 +28,13 @@ class ThankyouPage extends Component {
       })
     }
 
-    this.setState({
-      success: (reference === 'thank-you') ? true : false,
-    }, () => {
-      if (reference === "thank-you") {
-        // updateProfilePaid()
-      }
-    })
+    if (typeof reference) {
+      return axios.post('/flutterwave-verify', {
+        reference: reference
+      }).then(response => {
+        console.log(response)
+      })
+    }
   }
 
   render () {

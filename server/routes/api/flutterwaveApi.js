@@ -9,18 +9,17 @@ module.exports = (app) => {
     return fetch("https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/hosted/pay", {
       method: 'POST',
       body: JSON.stringify({
-        "txref":"MC_15204435314ft",
-        "PBFPubKey":"FLWPUBK-a4ae5b0f2e5ae9f4b81527f3e1b64ae5-X", 
+        "txref":req.body.reference,
+        "PBFPubKey":"FLWPUBK_TEST-ff9ddfa2ef023cbe71dbbd7da5aebbbf-X", 
         "customer_email": "adeola.adeyemoj@yahoo.com", 
         "amount": 1000, 
-        "currency": "NGN", 
-        "redirect_url": "/verify/"
+        "currency": "NGN",
+        "redirect_url": `/thankyou/${req.body.reference}`
       }),
       headers: {
         "Content-Type": "application/json"
       }
-    })
-    .then(res => res.json())
+    }).then(res => res.json())
 		.then(data => {
       console.log(data)
       res.send({ data });
@@ -32,22 +31,26 @@ module.exports = (app) => {
 	})
 
 	app.post('/flutterwave-verify', (req, res) => {
-    const options = {
-      headers: {
-        
-      }
-    };
 
-		return fetch(`https://api.flutterwave.co/transaction/verify/${req.body.reference}`, options)
+		return fetch("https://api.flutterwave.co/transaction/verify", {
+      method: 'POST',
+      body: JSON.stringify({
+        "txref":req.body.reference,
+        "SECKEY":"FLWSECK_TEST-344f6f6da9f7840084921115d6f02a3d-X",
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
 		.then(res => res.json())
 		.then(data => {
       console.log(data);
 			res.send({ data });
 		})
 		.catch(err => {
-			res.redirect('/error');
+      console.log(err)
+			res.send({ err });
 		});
-
   })
   
   app.get('/flutterwave-transactions', (req, res) => {
