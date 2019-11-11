@@ -88,7 +88,7 @@ class OrderPage extends PureComponent {
 
               <Aux>
                   <Header as="h2" className={"section-title"} textAlign="center">
-                    Registration Form
+                    Step 1 - Register your details
                   </Header>
                   <br/>
                   <CheckoutForm db={db} mobile={mobile} unloadForm={this.unloadForm} registerUser={registerUser} />

@@ -14,31 +14,14 @@ class Contact extends Component {
       email: '',
       full_name: '',
       message: '',
-      db: {},
       emailValid: false,
       formValid: false,
-      mobile: null,
       response: null,
     }
 
     this.handleChange = this.handleChange.bind(this)
     this.startLoading = this.startLoading.bind(this)
     this.endLoading = this.endLoading.bind(this)
-  }
-
-  componentDidMount () {
-    window.addEventListener("resize", this.updateValue);
-    var db = firebase.firestore();
-    var { mobile } = this.state;
-
-    if (!mobile) {
-      const body = document.querySelector('body').clientWidth
-      mobile = body <= 768 ? true : false
-      this.setState({
-        mobile,
-        db
-      })
-    }
   }
 
   startLoading = () => {
@@ -61,7 +44,7 @@ class Contact extends Component {
 
       setTimeout(
         function () {
-          document.location.href = '/#/thankyou/contact'
+          document.location.href = '/thankyou/contact'
         },
         500);
     } else if ( status === "fail" ) {
@@ -89,14 +72,6 @@ class Contact extends Component {
     this.setState({
       formValid: this.state.emailValid
     });
-  }
-
-  updateValue = () => {
-    const body = document.querySelector('.contact-container').clientWidth
-    const mobile = body <= 768 ? true : false
-    this.setState({
-      mobile: mobile
-    })
   }
 
   handleChange = (e, { name, value }) => {
@@ -138,6 +113,7 @@ class Contact extends Component {
 
   sendMessage = () => {
     const { email, full_name, message, formValid } = this.state
+    const { db } = this.props;
     let timestamp = Date();
     var ref = this.getReference();
     timestamp = timestamp.toString();
@@ -149,7 +125,6 @@ class Contact extends Component {
     if (formValid === true) {
       let status;
       this.startLoading();
-      const { db } = this.state;
       db.collection("contact").doc(ref).set({
         "email": email,
         "name": full_name,

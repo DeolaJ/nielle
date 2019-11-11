@@ -134,7 +134,6 @@ class App extends Component {
     const { db, userID } = this.state
     db.collection("userInfo").doc(userID).get().then((snapshot) => {
       var userInfo = snapshot.data();
-      console.log(userInfo)
       this.setState({
         userInfo: userInfo,
         snapshot
@@ -268,35 +267,6 @@ class App extends Component {
     })
   }
 
-  // startLoading = () => {
-  //   this.setState({
-  //     loading: true
-  //   })
-  // }
-  
-  // endLoading = () => {
-  //   const { status } = this.state;
-  //   if (status === "success") {
-  //     this.setState({
-  //       loading: false,
-  //       newUser: true,
-  //       response: 'Your account was created successfully'
-  //     })
-  //   } else if ( status === "fail" ) {
-  //     this.setState({
-  //       response: 'Network error, Please wait while we try again. Do not refresh your browser'
-  //     }, () => {
-  //       this.setNewUser()
-  //     })
-  //   }
-  // }
-
-  // setNewUser = () => {
-  //   console.log('yes')
-  //   const { userID, userInfo } = this.state
-    
-  // }
-
   componentDidUpdate () {
     const { loggedIn } = this.state
     loggedIn === false && this.removeLoggedIn()
@@ -308,7 +278,6 @@ class App extends Component {
  
   render () {
     const { db, navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName, loggedIn, registerDone } = this.state
-    console.log(this.state)
 
     return (
       <div className={'body'}>
@@ -321,16 +290,16 @@ class App extends Component {
 
             <Sidebar.Pusher dimmed={dimmed && visible} onClick={ !visible ? null : this.handleSidebar} >
               <Switch>
-                <Route exact path={'/'} render={(props) => <Homepage {...props} user={user} loggedIn={loggedIn} />} />
+                <Route exact path={'/'} render={(props) => <Homepage {...props} user={user} loggedIn={loggedIn} mobile={mobile} />} />
                 
                 
                 <Route path={'/login'} render={(props) => <Login {...props} user={user} loggedIn={loggedIn} />} />
-                <Route path={'/contact'} render={(props) => <Contact {...props} user={user} loggedIn={loggedIn} />} />
-                <Route path={'/order'} render={(props) => <OrderPage {...props} registerUser={this.registerUser} loggedIn={loggedIn} registerDone={registerDone} /> } />
+                <Route path={'/contact'} render={(props) => <Contact {...props} user={user} loggedIn={loggedIn} mobile={mobile} db={db} />} />
+                <Route path={'/order'} render={(props) => <OrderPage {...props} registerUser={this.registerUser} loggedIn={loggedIn} registerDone={registerDone} mobile={mobile} /> } />
                 
                 <Route path={'/welcome/:type'} render={(props) => user 
                   ? 
-                    <Welcome {...props} user={user} userInfo={userInfo} 
+                    <Welcome {...props} user={user} userInfo={userInfo} mobile={mobile} db={db}
                     userID={userID} displayName={displayName} setNewUser={this.setNewUser} 
                     getUserInfo={this.getUserInfo} logOutUser={this.logOutUser} setQr={this.setQr} 
                     loggedIn={loggedIn} registerRemove={this.registerRemove} /> 
@@ -340,14 +309,14 @@ class App extends Component {
                 
                 <Route path={'/welcome'} render={(props) => user 
                   ? 
-                    <Welcome {...props} user={user} userInfo={userInfo} userID={userID} 
+                    <Welcome {...props} user={user} userInfo={userInfo} userID={userID} mobile={mobile} db={db}
                     displayName={displayName} setNewUser={this.setNewUser} setQr={this.setQr} 
                     getUserInfo={this.getUserInfo} loggedIn={loggedIn} logOutUser={this.logOutUser} 
                     registerRemove={this.registerRemove} /> 
                   : 
                     <Login {...props} user={user} loggedIn={loggedIn} />} 
                   />
-                <Route path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} db={db} userID={userID} setTickets={this.setTickets} updateProfilePaid={this.updateProfilePaid} loggedIn={loggedIn} />} />
+                <Route path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} mobile={mobile} db={db} userID={userID} setTickets={this.setTickets} updateProfilePaid={this.updateProfilePaid} loggedIn={loggedIn} />} />
                 <Route path={'/trackorders'} component={OrdersLoadable} loggedIn={loggedIn} />
                 <Route component={ErrorLoadable} loggedIn={loggedIn} />
               </Switch>

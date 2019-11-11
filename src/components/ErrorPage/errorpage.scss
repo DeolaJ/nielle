@@ -2,9 +2,23 @@
   min-height: 100vh;
   margin: 0;
   color: white;
+  background-color: #aaa;
   background-blend-mode: multiply, multiply;
-  background: linear-gradient(to right, #240b36, #c31432);
-  background-color: #FF3CAC;
+  background: -webkit-linear-gradient(to left, #ee0979, #ff6a00);
+  background: linear-gradient(to left, #ee0979, #ff6a00);
+  
+  .sixteen.wide.column {
+    background-position: 100%;
+    background-size: 67%;
+    background-repeat: no-repeat;
+    background-color: rgba(0,0,0,.2);
+    background-blend-mode: overlay;
+  }
+
+  @media (max-width: 768px) {
+
+    background-color: #ee0979;
+  }
 
   .container {
     margin-top: 10rem;

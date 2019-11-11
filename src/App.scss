@@ -21,7 +21,7 @@
         font-size: 57px;
         margin-top: 0;
         margin-bottom: 20px;
-        font-weight: 400;
+        font-weight: 500;
       }
   
       h3.header {
@@ -42,7 +42,7 @@
       @media (max-width: 768px) {
         
         h1.header {
-          font-size: 45px;
+          font-size: 42px;
         }
   
         h3.header {
@@ -104,6 +104,14 @@
     border-radius: 60px;
     padding: .9rem 1.6rem;
 
+    &.large {
+      padding: 1.5rem 5rem;
+    }
+
+    &.medium {
+      padding: 1.2rem 4rem;
+    }
+
     &:hover {
       transform: translateY(-2px) scale(1.01);
       box-shadow: 0 5px 16px 1px rgba(0,0,0,0.13), 0 1px 4px 0 rgba(0,0,0,0.09) !important;
@@ -111,7 +119,7 @@
 
     &.primary-main {
       color: $color-grey !important;
-      background-color: #DAFFED !important;
+      background-color: #FBFEF9 !important;
       font-weight: 500;
       border: none;
       text-transform: uppercase;

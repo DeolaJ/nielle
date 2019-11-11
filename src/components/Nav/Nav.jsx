@@ -52,7 +52,7 @@ class Nav extends Component {
                 <Aux>
                   <List.Item>
                     <Link to='/order'>
-                      <Button className={'primary-main'} id="order" onClick={changeActiveState}>Register for event</Button>
+                      <Button className={'primary-main'} id="order" onClick={changeActiveState}>Purchase ticket</Button>
                     </Link>
                   </List.Item>
 
@@ -68,23 +68,16 @@ class Nav extends Component {
 
           :
           <Grid className={'mobile-navitems'}>
-            <Grid.Row columns={3}>
+            <Grid.Row columns={2}>
 
               <Grid.Column textAlign='left' verticalAlign='middle'>
                 <Icon onClick={handleSidebar} size='big' name='bars'/>
               </Grid.Column>
 
-              <Grid.Column as={Link} to={"/"} textAlign='center' verticalAlign='middle' style={{ position: 'relative', height: '55px', overflow: 'hidden' }}>
+              <Grid.Column as={Link} to={"/"} textAlign='right' verticalAlign='middle' style={{ position: 'relative', height: '55px', overflow: 'hidden' }}>
                 <img alt='logo icon' className={'mobile-logo'} src={logowhitesmall}/>
               </Grid.Column>
 
-              <Grid.Column textAlign='right' verticalAlign='middle'>
-                <Link to='/order'>
-                  <Button className={'primary-main icon'} id="order" onClick={changeActiveState}>
-                    <Icon name="bullseye" />
-                  </Button>
-                </Link>
-              </Grid.Column>
             </Grid.Row>
           </Grid>
         }

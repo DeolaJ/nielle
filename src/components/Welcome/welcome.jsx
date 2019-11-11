@@ -6,14 +6,14 @@ import Aux from '../../hoc/Aux'
 import firebase from '../../firebase'
 import axios from 'axios'
 import QRCode from 'qrcode'
-require('firebase/functions')
+import Loader from '../Loader/loader'
 
 class Welcome extends Component {
 
   constructor (props) {
     super (props)
     this.state = {
-      db: {},
+      loading: false,
       modalOpen: false,
       newUser: false,
       tickets: "",
@@ -24,23 +24,17 @@ class Welcome extends Component {
   componentDidMount () {
     const { match, registerRemove, getUserInfo, userInfo } = this.props
     const { type } = match.params
-    const db = firebase.firestore()
-
-    console.log(type)
 
     userInfo && userInfo.qrCode && this.setState({ qrCode: userInfo.qrCode })
 
     userInfo && userInfo.tickets && this.setState({ tickets: userInfo.tickets })
 
-    this.setState({
-      db: db
-    }, () => {
-      if (type === "newuser") {
-        registerRemove()
-      } else {
-        getUserInfo()
-      }
-    })
+  
+    if (type === "newuser") {
+      registerRemove()
+    } else {
+      getUserInfo()
+    }
   }
 
   getReference = (full_name) => {
@@ -53,10 +47,17 @@ class Welcome extends Component {
     return text;
   }
 
-
-  handleOpen = (reference) => this.setState({ reference, modalOpen: true })
-
-  handleClose = () => this.setState({ modalOpen: false })
+  startLoading = () => {
+    this.setState({
+      loading: true
+    })
+  }
+  
+  endLoading = () => {
+    this.setState({
+      loading: false,
+    })
+  }
 
   payNow = () => {
     const { tickets } = this.state
@@ -64,10 +65,8 @@ class Welcome extends Component {
     var price = tickets && Number(tickets) * 1000
     const ref = this.getReference(name);
 
-    var functions = firebase.functions();
-
     if (typeof tickets) {
-      
+      this.startLoading()
       return axios({
         method: 'post',
         url: 'https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/hosted/pay',
@@ -86,41 +85,11 @@ class Welcome extends Component {
       })
       .then(response => {
         console.log(response)
+        this.endLoading()
         window.location.href = response.data.data.link
       }).catch(error => {
         console.log(error)
       })
-        // {
-        //   PBFPubKey: "",
-        //   "email": email,
-        //   "amount": price,
-        //   "currency": "NGN",
-        //   "txref": ref,
-        //   "meta": [{"name": name, "timestamp": timestamp, "gender": gender }],
-        //   callback: function(response) {
-        //     let txref = response.tx.txRef 
-        //     let chargeResponse = response.tx.chargeResponseCode
-
-        //     if (chargeResponse === "00" || chargeResponse === "0") {
-        //       return axios.post('flutterwave-verify',
-        //         {
-        //           PBFSecKey: "",
-        //           txref: txref
-        //         }).then(response => {
-        //           window.location = "http://localhost:8088/verify/thank-you"; //Add your success page here
-        //         }).catch(error => {
-        //           console.log(error);
-        //         })
-        //     } else {
-        //       window.location = "http://localhost:8088/verify/failed";  //Add your failure page here
-        //     }
-        //   }
-        // }).then(response => {
-        //   console.log(response)
-        //   // return <Redirect to={response.url} />
-        // }).catch(error => {
-        //   console.log(error);
-        // })
     }
   }
 
@@ -134,17 +103,6 @@ class Welcome extends Component {
     const base = this
     var canvas = document.getElementById('canvas')
     var barcodeContainer = document.querySelector('.barcode-image')
-    // var opts = {
-    //   errorCorrectionLevel: 'H',
-    //   type: 'image/png',
-    //   width: 100,
-    //   quality: 0.3,
-    //   margin: 1,
-    //   color: {
-    //     dark:"#010599FF",
-    //     light:"#FFBF60FF"
-    //   }
-    // }
     
     QRCode.toCanvas(canvas, `${name} bought ${tickets} tickets and registered at ${timestamp}`, function (error) {
       if (error) {
@@ -166,8 +124,8 @@ class Welcome extends Component {
   }
 
   sendToFirestore = () => {
-    const { db, qrCode } = this.state
-    const { userID, setQr } = this.props
+    const { qrCode } = this.state
+    const { userID, setQr, db } = this.props
 
     db.collection("userInfo").doc(userID).set({
       qrCode: qrCode
@@ -188,12 +146,10 @@ class Welcome extends Component {
   }
 
   render () {
-    const { user, displayName, userInfo, loggedIn } = this.props
-    const { tickets, qrCode } = this.state
+    const { user, displayName, userInfo, loggedIn, mobile } = this.props
+    const { tickets, qrCode, loading } = this.state
     var price = tickets && Number(tickets)*1000
     var FinalPrice = price && `N${price}`
-
-    console.log(this.state)
     
     if (loggedIn === false) {
       return <Redirect to="/" />
@@ -212,7 +168,7 @@ class Welcome extends Component {
                     Welcome{' '}{userInfo && userInfo.name}
                   </Header>
 
-                  <br/><br/>
+                  <br/>
                   {
                     displayName === "false" ?
 
@@ -220,7 +176,7 @@ class Welcome extends Component {
                       <div className={"pay-section"}>
     
                         <Header as="h3">
-                          Buy Ticket <span className={"ticket-cost"}>{FinalPrice}</span>
+                          Step 2 - Buy Ticket <span className={"ticket-cost"}>{FinalPrice}</span>
                         </Header>
 
                         <Form>
@@ -236,7 +192,7 @@ class Welcome extends Component {
                     :
 
                     <Aux>
-                      <Header as="h3">
+                      <Header as="h4">
                         Get ready to have a great time this December at the event. 
                         Hope you have the following items ready.
                       </Header>
@@ -247,7 +203,7 @@ class Welcome extends Component {
                         {
                           (userInfo && userInfo.qrCode) ?
 
-                          <Grid stackable columns={2}>
+                          <Grid stackable className={"event-ticket"} columns={2}>
                             <Grid.Column>
                               <div>
                                 <p>
@@ -257,7 +213,7 @@ class Welcome extends Component {
                                   <br/>
                                   This ticket admits {userInfo.tickets} attendee{userInfo.tickets > 1 && "s"}
                                   <br/>
-                                  Date: 7 - DEC - 2019
+                                  Date: Saturday, 7th December 2019
                                   <br/>
                                   Venue: 49, Abiola Crescent off Toyin street Ikeja
                                   <br/>
@@ -267,7 +223,7 @@ class Welcome extends Component {
                             </Grid.Column>
                             
                             <Grid.Column>
-                              <div style={{ textAlign: "right" }}>
+                              <div style={{ textAlign: mobile ? "left" : "right" }}>
                                 <div className="barcode-image">
                                   { 
                                     qrCode && 
@@ -311,6 +267,13 @@ class Welcome extends Component {
               }
 
             </Container>
+
+            {
+              loading && 
+
+              <Loader loading={loading} message={"Processing payment"} />
+            }
+
           </Grid.Column>
         </Grid>
       </Aux>

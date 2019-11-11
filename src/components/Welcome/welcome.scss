@@ -3,11 +3,20 @@
   margin: 0;
   background-color: #aaa;
   background-blend-mode: multiply, multiply;
-  background-image: linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%);
+  background: -webkit-linear-gradient(to left, #ee0979, #ff6a00);
+  background: linear-gradient(to left, #ee0979, #ff6a00);
+
+  .sixteen.wide.column {
+    background-position: 100%;
+    background-size: 67%;
+    background-repeat: no-repeat;
+    background-color: rgba(0,0,0,.2);
+    background-blend-mode: overlay;
+  }
 
   @media (max-width: 768px) {
 
-    background-color: #74EBD5;
+    background-color: #ee0979;
 
     .sixteen.wide.column {
       background-position: 100%;
@@ -19,7 +28,7 @@
   }
   
   .container.welcome-body {
-    margin-top: 10rem !important;
+    margin: 10rem auto !important;
     padding: 2rem;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, .9);
@@ -63,7 +72,11 @@
     }
 
     .container.ticket-section {
-      margin-top: 3rem;
+      margin: 3rem 0 !important;
+
+      .ui.grid.event-ticket.column {
+        margin: 0 !important;
+      }
     }
   }
 

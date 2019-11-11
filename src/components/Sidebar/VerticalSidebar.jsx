@@ -55,7 +55,7 @@ class VerticalSidebar extends Component {
               <Menu.Item as='div'>
                 <Link to='/order'>
                   <Button className={'primary-main mobile-menu'} id={"order"} active={activeitem === 'order'} onClick={changeActiveState}>
-                    Register for event
+                    Purchase ticket
                   </Button>
                 </Link>
               </Menu.Item>

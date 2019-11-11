@@ -1,5 +1,6 @@
 .ui.inverted.vertical.menu.sidebar-menu {
   display: flex;
+  width: 250px;
 
   a.item {
     cursor: pointer;
@@ -20,9 +21,20 @@
     }
   }
 
+  div.item {
+    text-align: left;
+
+    img {
+      width: 60px;
+      margin: 0 auto;
+    }
+  }
+
   div.item:first-child {
     padding-top: 2.5em;
     margin-top: auto;
     padding-bottom: 2em;
   }
+
+
 }

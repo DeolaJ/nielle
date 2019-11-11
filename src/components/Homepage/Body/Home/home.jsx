@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import { Grid, Header, Container, List, Button } from 'semantic-ui-react'
 import './home.scss'
-import Typist from 'react-typist'
 import { Link } from 'react-router-dom'
 import homeIcon from '../../../../images/colorful.png'
 
@@ -21,43 +20,40 @@ class Home extends Component {
         <Grid.Column width={16}>
           <Container fluid textAlign={mobile ? 'center' : 'left'} className={'home-content-container'}>
             <Header as='h1' className={'hide-on-mobile'}>
-              <Typist cursor={{
-                show: false,
-                blink: true,
-                element: '|',
-                hideWhenDone: true,
-                hideWhenDoneDelay: 1000,
-              }} avgTypingDelay={100}>
-                Nielle's Backyard Cookout 
-                <br/>
-                &amp; Movie Night
-              </Typist>
+              Nielle's Backyard Cookout 
+              <br/>
+              &amp; Movie Night
             </Header>
 
             <Header as='h1' textAlign='center' className={'mobile-only'}>
-              <Typist cursor={{
-                show: false,
-                blink: true,
-                element: '|',
-                hideWhenDone: true,
-                hideWhenDoneDelay: 1000,
-              }} avgTypingDelay={130}>
-                Nielle's Backyard Cookout &amp; Movie Night
-              </Typist>
+              Nielle's Backyard Cookout &amp; Movie Night
             </Header>
             <div className={'header-content'}>
               <p className={"venue-info"}>
-                7 December 2019 - Opebi, Lagos
+                Saturday, 7th December 2019
+                <br/>
+                49, MKO. Abiola Crescent off Toyin street, Lagos
+                <br/>
+                12pm - 10pm
               </p>
               <p>
-                Get ready for an amazing experience with food, drinks, games and friends
+                Get ready for an amazing experience with food, drinks, games and friends.
+                <br/>
+                Contact our team for partnerships or enquiries.
               </p>
             </div>
             <List horizontal>
-              <List.Item>
+              <List.Item style={{ marginBottom: "1rem" }}>
                 <Link to='/order'>
-                  <Button size='large' color='blue' className={'primary-main'}>
-                    Register for event
+                  <Button size='large' color='blue' className={'medium primary-main'}>
+                    Purchase Ticket
+                  </Button>
+                </Link>
+              </List.Item>
+              <List.Item>
+                <Link to='/contact'>
+                  <Button size='large' color='blue' className={'medium primary-main'}>
+                    Contact Us
                   </Button>
                 </Link>
               </List.Item>

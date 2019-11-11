@@ -15,10 +15,31 @@ class About extends Component {
       <Grid stackable className={'section about-container'} style={{minHeight: '100vh'}}>
         <Grid.Column width={16}>
           <div className={'about-content'}>
+
+            <Grid stackable className={"partners-section"}>
+              <Header as="h2" textAlign="center">Event Partners</Header>
+              <Grid.Row stretched columns={4}>
+                <Grid.Column width={4}>
+                  NTEL
+                </Grid.Column>
+                <Grid.Column width={4}>
+                  FLUTTERWAVE
+                </Grid.Column>
+                <Grid.Column width={4}>
+                  PIGGYVEST
+                </Grid.Column>
+                <Grid.Column width={4}>
+                  FINANCIAL TALK GUYS
+                </Grid.Column>
+              </Grid.Row>
+            </Grid>
+
+            <Divider />
+
             <Fade bottom={!mobile && true} cascade={!mobile && true}>
               <Segment className={'about-body'}>
                 <Grid stackable>
-                  <Grid.Row stretched columns={mobile ? 1: 2}>
+                  <Grid.Row stretched>
                     <Grid.Column width={8}>
                       Image
                     </Grid.Column>
@@ -96,7 +117,7 @@ class About extends Component {
                         Date: 7th of December
                       </p>
                       <p>
-                        Venue: 49, Abiola Crescent off Toyin street Ikeja
+                        Venue: 49, MKO. Abiola Crescent off Toyin street Ikeja, Lagos
                       </p>
                       <p>
                         Time: 12pm
@@ -133,18 +154,25 @@ class About extends Component {
               <Container>
                 <Grid stackable>
                   <Grid.Row stretched columns={mobile ? 1: 2}>
-                    <Grid.Column width={8} className={'ticket-content_body'}>
+                    <Grid.Column width={8} className={'ticket-content_body'} verticalAlign="middle">
                       <Header as='h2'>
                         Anticipate a fun and learning experience
                       </Header>
+                      <p>
+                        Attendee Ticket - N1000
+                        <br/>
+                        Vendor Registration - N10,000
+                      </p>
                     </Grid.Column>
 
-                    <Grid.Column width={8}>
+                    <Grid.Column className={"register-group-button"} width={8} textAlign="center" verticalAlign="middle">
                       <Link to="/order">
-                        <Button size="large" className={"primary-main"}>Register as attendee</Button>
+                        <Button size="large" className={"primary-main"}>Purchase Ticket (attendee)</Button>
                       </Link> 
                       <br/>
-                      <Button size="large" className={"primary-sub"}>Register as Vendor</Button>
+                      <Link to="/">
+                        <Button size="large" className={"primary-sub"}>Register as Vendor</Button>
+                      </Link>
                     </Grid.Column>
                   </Grid.Row>
                 </Grid>

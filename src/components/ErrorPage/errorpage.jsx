@@ -29,15 +29,15 @@ class ErrorPage extends Component {
               <List horizontal>
                 <List.Item>
                   <Link to='/'>
-                    <Button className={'primary-main'}>
+                    <Button className={'primary-sub'}>
                       Home
                     </Button>
                   </Link>
                 </List.Item>
                 <List.Item>
-                  <Link to='/payment'>
-                    <Button className={'order-button'}>
-                      Proceed to order
+                  <Link to='/order'>
+                    <Button className={'primary-main order-button'}>
+                      Purchase Ticket
                     </Button>
                   </Link>
                 </List.Item>
