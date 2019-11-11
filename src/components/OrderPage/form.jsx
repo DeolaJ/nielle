@@ -21,7 +21,7 @@ class CheckoutForm extends Component {
       formValid: false
     }
 
-    this.startLoading = this.endLoading.bind(this)
+    this.startLoading = this.startLoading.bind(this)
     this.endLoading = this.endLoading.bind(this)
     this.handleChange = this.handleChange.bind(this)
   }
@@ -123,6 +123,8 @@ class CheckoutForm extends Component {
     const { gender, response, password, errorMessage,
       email, full_name, number, loading, 
     } = this.state
+
+    console.log(this.state)
     
     const genders = [
       { key: 'm', text: 'Male', value: 'Male' },
@@ -177,7 +179,7 @@ class CheckoutForm extends Component {
         {
           loading && 
 
-          <Loader loading={loading} message={"Processing request"} />
+          <Loader loading={loading} message={"Registration in Progress"} />
         }
 
       </Aux>

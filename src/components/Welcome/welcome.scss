@@ -1,13 +1,21 @@
 .ui.grid.welcome-container {
   min-height: 100vh;
   margin: 0;
-  background-blend-mode: multiply;
   background-color: #aaa;
   background-blend-mode: multiply, multiply;
   background-image: linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%);
 
   @media (max-width: 768px) {
+
     background-color: #74EBD5;
+
+    .sixteen.wide.column {
+      background-position: 100%;
+      background-size: 67%;
+      background-repeat: no-repeat;
+      background-color: rgba(0,0,0,.55);
+      background-blend-mode: overlay;
+    }
   }
   
   .container.welcome-body {
@@ -25,9 +33,14 @@
     }
 
     label {
-      color: green;
       font-size: 1.2rem;
       margin-bottom: 10px;
+      font-weight: 500;
+    }
+
+    .ticket-cost {
+      color: green;
+      float: right;
     }
 
     .ticket-button { 
@@ -37,6 +50,16 @@
 
     .generate-ticket {
       margin-left: 14px;
+    }
+
+    .pay-section {
+      margin-top: 2rem;
+
+      .header {
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
     }
 
     .container.ticket-section {

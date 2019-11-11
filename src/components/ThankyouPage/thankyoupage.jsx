@@ -51,10 +51,14 @@ class ThankyouPage extends Component {
         base.setState({
           success: success
         }, () => {
-          this.sendToFirestore(tickets)
+          success && this.sendToFirestore(tickets)
         })
       }).catch(error => {
         console.log(error)
+        const success = false
+        base.setState({
+          success: success
+        })
       })
     }
   }

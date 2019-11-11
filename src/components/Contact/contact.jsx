@@ -22,6 +22,8 @@ class Contact extends Component {
     }
 
     this.handleChange = this.handleChange.bind(this)
+    this.startLoading = this.startLoading.bind(this)
+    this.endLoading = this.endLoading.bind(this)
   }
 
   componentDidMount () {

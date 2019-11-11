@@ -22,7 +22,7 @@ class Login extends Component {
       redirectTrue: null
     }
 
-    this.startLoading = this.endLoading.bind(this)
+    this.startLoading = this.startLoading.bind(this)
     this.endLoading = this.endLoading.bind(this)
     this.handleChange = this.handleChange.bind(this)
   }

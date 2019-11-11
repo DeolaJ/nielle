@@ -60,8 +60,6 @@ class OrderPage extends PureComponent {
 
     const {  mobile, db } = this.state
     const { registerUser, loggedIn, registerDone } = this.props
-    console.log(registerDone)
-    console.log(this.props)
 
     if (registerDone) {
       return <Redirect to="/welcome/newuser" />
@@ -90,7 +88,7 @@ class OrderPage extends PureComponent {
 
               <Aux>
                   <Header as="h2" className={"section-title"} textAlign="center">
-                    Order Form
+                    Registration Form
                   </Header>
                   <br/>
                   <CheckoutForm db={db} mobile={mobile} unloadForm={this.unloadForm} registerUser={registerUser} />

@@ -173,6 +173,7 @@ class App extends Component {
       userInfo: null
     }, () => {
       this.removeLocalStorage()
+      this.state.mobile && this.handleSidebar()
       firebase.auth().signOut().then(() => {
         this.setState({ 
           loggedIn: false
@@ -183,9 +184,10 @@ class App extends Component {
   }
 
   changeActiveState = (e, { id, className }) => {
-    this.setState({ activeitem: id }, () => {
-      this.state.mobile && className.includes('mobile-menu') && this.handleSidebar()
+    !this.state.mobile ? this.setState({ activeitem: id }) : this.setState({ activeitem: id }, () => {
+      this.handleSidebar()
     })
+    
   }
 
   updateValue = () => {
@@ -199,7 +201,6 @@ class App extends Component {
   handleSidebar = () => this.setState(prevState => ({ visible: !prevState.visible, navVisible: !prevState.navVisible }))
 
   registerUser = (userInfo) => {
-    console.log(userInfo)
     firebase.auth().onAuthStateChanged(FBUser => {
       FBUser.updateProfile({
         displayName: "false"
@@ -215,7 +216,6 @@ class App extends Component {
           this.setLocalStorage()
         })
       }).then(() => {
-        console.log('yes')
         const { db } = this.state
         const { email, name, gender, number, timestamp } = userInfo
         const doc = {
@@ -310,7 +310,6 @@ class App extends Component {
     const { db, navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName, loggedIn, registerDone } = this.state
     console.log(this.state)
 
-    console.log(process.env.FIREBASE_CONFIG)
     return (
       <div className={'body'}>
         <Router basename={'/'}>
@@ -327,7 +326,7 @@ class App extends Component {
                 
                 <Route path={'/login'} render={(props) => <Login {...props} user={user} loggedIn={loggedIn} />} />
                 <Route path={'/contact'} render={(props) => <Contact {...props} user={user} loggedIn={loggedIn} />} />
-                <Route path={'/order'} render={(props) => <OrderPage {...props} registerUser={this.registerUser} loggedIn={loggedIn} registerDone={registerDone} />} />
+                <Route path={'/order'} render={(props) => <OrderPage {...props} registerUser={this.registerUser} loggedIn={loggedIn} registerDone={registerDone} /> } />
                 
                 <Route path={'/welcome/:type'} render={(props) => user 
                   ? 

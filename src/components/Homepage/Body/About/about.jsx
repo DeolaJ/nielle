@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import { Grid, Container, Divider, Header, Segment, Button } from 'semantic-ui-react'
 import './about.scss'
+import { Link } from 'react-router-dom'
 import Fade from 'react-reveal/Fade';
-import Map from './map';
+// import Map from './map';
 import Aux from '../../../../hoc/Aux'
 
 class About extends Component {
@@ -17,7 +18,7 @@ class About extends Component {
             <Fade bottom={!mobile && true} cascade={!mobile && true}>
               <Segment className={'about-body'}>
                 <Grid stackable>
-                  <Grid.Row stackable stretched columns={mobile ? 1: 2}>
+                  <Grid.Row stretched columns={mobile ? 1: 2}>
                     <Grid.Column width={8}>
                       Image
                     </Grid.Column>
@@ -79,7 +80,7 @@ class About extends Component {
             <Fade bottom={!mobile && true} cascade={!mobile && true}>
               <Segment className={'location-body'}>
                 <Grid stackable>
-                  <Grid.Row stackable stretched columns={mobile ? 1: 2}>
+                  <Grid.Row columns={mobile ? 1: 2}>
                     <Grid.Column width={6} className={'location-content_body'}>
                       <Header className={'section-title'} as='h2'>
                         Location
@@ -119,7 +120,8 @@ class About extends Component {
                     </Grid.Column>
                     <Grid.Column width={10}>
                       <div className={"map-container"}>
-                        <Map />
+                        {/* <Map /> */}
+                        <iframe title="map to venue" src={"map.html"} width="100%" height="100%"></iframe>
                       </div>
                     </Grid.Column>
                   </Grid.Row>
@@ -130,7 +132,7 @@ class About extends Component {
             <Segment className={'ticket-body'}>
               <Container>
                 <Grid stackable>
-                  <Grid.Row stackable stretched columns={mobile ? 1: 2}>
+                  <Grid.Row stretched columns={mobile ? 1: 2}>
                     <Grid.Column width={8} className={'ticket-content_body'}>
                       <Header as='h2'>
                         Anticipate a fun and learning experience
@@ -138,7 +140,9 @@ class About extends Component {
                     </Grid.Column>
 
                     <Grid.Column width={8}>
-                      <Button size="large" className={"primary-main"}>Register as attendee</Button>
+                      <Link to="/order">
+                        <Button size="large" className={"primary-main"}>Register as attendee</Button>
+                      </Link> 
                       <br/>
                       <Button size="large" className={"primary-sub"}>Register as Vendor</Button>
                     </Grid.Column>

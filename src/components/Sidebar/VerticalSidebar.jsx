@@ -29,7 +29,7 @@ class VerticalSidebar extends Component {
           </Menu.Item>
           {
             navItems.map(item => (
-              <Menu.Item key={item.id} as={Link} to={item.link} className={'mobile-menu'} active={activeitem === item.id}
+              <Menu.Item key={item.id} as={Link} id={item.id} to={item.link} className={'mobile-menu'} active={activeitem === item.id}
                 onClick={changeActiveState}>
                 {item.name}
               </Menu.Item>
@@ -54,7 +54,7 @@ class VerticalSidebar extends Component {
             <Aux>
               <Menu.Item as='div'>
                 <Link to='/order'>
-                  <Button className={'primary-main mobile-menu'} id="order" onClick={changeActiveState}>
+                  <Button className={'primary-main mobile-menu'} id={"order"} active={activeitem === 'order'} onClick={changeActiveState}>
                     Register for event
                   </Button>
                 </Link>
@@ -62,7 +62,7 @@ class VerticalSidebar extends Component {
 
               <Menu.Item as='div' active={activeitem === 'login'}>
                 <Link to='/login'>
-                  <Button className={'primary-main mobile-menu'} id={'login'} onClick={changeActiveState}>Login</Button>
+                  <Button className={'primary-main mobile-menu'} id={'login'} onClick={changeActiveState} active={activeitem === 'login'}>Login</Button>
                 </Link>
               </Menu.Item>
             </Aux>

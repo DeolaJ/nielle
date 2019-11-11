@@ -7,9 +7,19 @@
   background-image: linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%);
 
   @media (max-width: 768px) {
+    
     background-color: #74EBD5;
+
+    .sixteen.wide.column {
+      background-position: 100%;
+      background-size: 67%;
+      background-repeat: no-repeat;
+      background-color: rgba(0,0,0,.55);
+      background-blend-mode: overlay;
+    }
   }
-  
+
+
   div.contact-form {
     padding: 4rem 0;
     margin-top: 6rem;

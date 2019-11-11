@@ -5,13 +5,22 @@
   position: relative;
   margin: 0;
   background-color: #aaa;
-  padding-top: 3rem;
-  padding-bottom: 6rem;
   background-blend-mode: multiply, multiply;
   background-image: linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%);
 
   @media (max-width: 768px) {
+
     background-color: #74EBD5;
+
+    .sixteen.wide.column {
+      background-position: 100%;
+      background-size: 67%;
+      background-repeat: no-repeat;
+      background-color: rgba(0,0,0,.55);
+      background-blend-mode: overlay;
+      padding-top: 3rem;
+      padding-bottom: 6rem;
+    }
   }
 
   .uploading {
@@ -31,13 +40,14 @@
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 0 14px 7px rgba(0, 0, 0, .2);
-    margin-top: 6rem;
+    margin-top: 9rem;
+    margin-bottom: 5rem;
     margin-left: auto !important;
     margin-right: auto !important;
     width: 50%;
 
     .ui.form {
-      padding: 2rem 0;
+      padding: 2rem 0 4rem;
 
       label {
         font-size: 1.02rem;
@@ -51,9 +61,11 @@
 
     .order-button {
       background-blend-mode: multiply;
-      background-color: #FF3CAC;
-      background-image: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+      background-color: #74EBD5;
+      background-image: linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%);
       color: white;
+      text-transform: uppercase;
+      font-weight: 500;
     }
 
     .response-message {

@@ -58,26 +58,6 @@ class Welcome extends Component {
 
   handleClose = () => this.setState({ modalOpen: false })
 
-  // pay = () => {
-  //   // const { tickets } = this.state
-  //   // const { email, name, timestamp, gender } = this.props.userInfo
-  //   // var price = tickets && Number(tickets) * 1000
-  //   // const ref = this.getReference(name);
-
-  //   var pay = firebase.functions().httpsCallable('pay');
-
-  //   // if (typeof tickets) {
-  //   return pay({}).then(function(result) {
-  //     // Read result of the Cloud Function.
-  //     console.log(result)
-  //     // window.location.href = result.data.data.data.link;
-  //   }).catch(function(error) {
-  //     // Getting the Error details.
-  //     console.log(error)
-  //     // ...
-  //   });
-  // }
-
   payNow = () => {
     const { tickets } = this.state
     const { email, name, timestamp, gender } = this.props.userInfo
@@ -148,41 +128,25 @@ class Welcome extends Component {
     this.setState({ [name]: value })
   }
 
-  // clickRegister = () => {
-  //   // const { tickets } = this.props.userInfo
-  //   const tickets = 4;
-  //   var iframe = document.getElementById("iframe").contentWindow;
-  //   console.log(iframe.document)
-  //   // for(let i=0; i<tickets; i++) {
-  //   //   iframe.document.querySelector('.ticket-quantity .btn-increment').click()
-  //   // }
-  //   // // var selectOption = iframe.document.querySelector(`.ticket_quantity_select option[value="${tickets}"]`);
-  //   // // // var elmnt = iframe.contentWindow.document.getElementsByTagName("H1")[0];
-  //   // // console.log(selectOption)
-  //   // // selectOption.selected = true;
-  //   // // iframe.document.querySelector('#register').click()
-  //   // iframe.document.querySelector('input[value="Get Your Ticket"]').click()
-  // }
-
   generateQR = () => {
     const { userInfo } = this.props
     const { name, timestamp, tickets } = userInfo
     const base = this
     var canvas = document.getElementById('canvas')
     var barcodeContainer = document.querySelector('.barcode-image')
-    var opts = {
-      errorCorrectionLevel: 'H',
-      type: 'image/png',
-      width: 200,
-      quality: 0.3,
-      margin: 5,
-      color: {
-        dark:"#010599FF",
-        light:"#FFBF60FF"
-      }
-    }
+    // var opts = {
+    //   errorCorrectionLevel: 'H',
+    //   type: 'image/png',
+    //   width: 100,
+    //   quality: 0.3,
+    //   margin: 1,
+    //   color: {
+    //     dark:"#010599FF",
+    //     light:"#FFBF60FF"
+    //   }
+    // }
     
-    QRCode.toCanvas(canvas, `${name} bought ${tickets} tickets and registered at ${timestamp}`, [opts], function (error) {
+    QRCode.toCanvas(canvas, `${name} bought ${tickets} tickets and registered at ${timestamp}`, function (error) {
       if (error) {
         console.error(error)
       } else {
@@ -224,9 +188,10 @@ class Welcome extends Component {
   }
 
   render () {
-    const { user, logOutUser, displayName, userInfo, loggedIn } = this.props
+    const { user, displayName, userInfo, loggedIn } = this.props
     const { tickets, qrCode } = this.state
     var price = tickets && Number(tickets)*1000
+    var FinalPrice = price && `N${price}`
 
     console.log(this.state)
     
@@ -252,18 +217,20 @@ class Welcome extends Component {
                     displayName === "false" ?
 
                     <Aux>
-                      <Header as="h3" textAlign="left">
-                        <div>How many tickets will you like to pay for?</div>
-                      </Header>
+                      <div className={"pay-section"}>
+    
+                        <Header as="h3">
+                          Buy Ticket <span className={"ticket-cost"}>{FinalPrice}</span>
+                        </Header>
 
-                     <Button onClick={this.sendMail}>Mail me</Button>
-                      <Form>
-                        <Form.Field>
-                          <Form.Input type="number" value={tickets} name="tickets" label={`N${price}`} placeholder='Enter a number' onChange={this.handleChange}/>
-                        </Form.Field>
-                        <Button className={'primary-main ticket-button'} onClick={this.payNow}>Proceed to pay</Button>
-                      </Form>
-                      
+                        <Form>
+                          <Form.Field>
+                            <Form.Input type="number" value={tickets} name="tickets" label={"How many tickets will you like to pay for?"} placeholder='Enter a number' onChange={this.handleChange}/>
+                          </Form.Field>
+                          <Button className={'primary-main ticket-button'} onClick={this.payNow}>Proceed to pay</Button>
+                        </Form>
+                        
+                      </div>
                     </Aux>
 
                     :

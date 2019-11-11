@@ -144,8 +144,22 @@
       }
 
       .map-container {
-        min-height: 400px;
+        height: 530px;
         position: relative;
+
+        iframe {
+          border: none;
+        }
+      }
+
+      @media (max-width: 960px) {
+
+        .row {
+
+          .column {
+            width: 100% !important;
+          }
+        }
       }
 
       @media (max-width: 768px) {
