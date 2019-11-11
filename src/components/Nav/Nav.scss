@@ -16,6 +16,7 @@
     a.item {
       color: white !important;
       font-weight: 500;
+      text-transform: uppercase;
       padding: 11px;
 
       &.active {
@@ -35,7 +36,7 @@
 
     .mobile-logo {
       position: absolute;
-      transform: translate(-50%, -44%);
+      transform: translate(-50%, -31%);
     }
   }
 

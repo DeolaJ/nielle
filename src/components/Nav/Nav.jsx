@@ -70,7 +70,7 @@ class Nav extends Component {
           <Grid className={'mobile-navitems'}>
             <Grid.Row columns={3}>
 
-              <Grid.Column textAlign='left'>
+              <Grid.Column textAlign='left' verticalAlign='middle'>
                 <Icon onClick={handleSidebar} size='big' name='bars'/>
               </Grid.Column>
 
@@ -78,10 +78,10 @@ class Nav extends Component {
                 <img alt='logo icon' className={'mobile-logo'} src={logowhitesmall}/>
               </Grid.Column>
 
-              <Grid.Column textAlign='right'>
+              <Grid.Column textAlign='right' verticalAlign='middle'>
                 <Link to='/order'>
                   <Button className={'primary-main icon'} id="order" onClick={changeActiveState}>
-                    Register
+                    <Icon name="bullseye" />
                   </Button>
                 </Link>
               </Grid.Column>

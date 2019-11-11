@@ -317,7 +317,7 @@ class App extends Component {
 
           <Nav navItems={navItems} activeitem={activeitem} mobile={mobile} handleSidebar={this.handleSidebar} changeActiveState={this.changeActiveState} navVisible={navVisible} logOutUser={this.logOutUser} loggedIn={loggedIn} />
 
-          <Sidebar.Pushable as={Segment} style={{margin: '0', border: 'none' }} >
+          <Sidebar.Pushable as={Segment} style={{margin: '0', border: 'none', borderRadius: "0" }} >
             <VerticalSidebar activeitem={activeitem} animation={animation} direction={direction} visible={visible} handleSidebar={this.handleSidebar}  changeActiveState={this.changeActiveState} navItems={navItems} logOutUser={this.logOutUser} loggedIn={loggedIn} />
 
             <Sidebar.Pusher dimmed={dimmed && visible} onClick={ !visible ? null : this.handleSidebar} >

@@ -98,7 +98,7 @@ class Welcome extends Component {
           "amount": price, 
           "currency": "NGN",
           "meta": [{"name": name, "timestamp": timestamp, "gender": gender, "tickets": tickets }],
-          "redirect_url": `http://localhost:3000/thankyou/${ref}`
+          "redirect_url": `https://nielle-19.firebaseapp.com/thankyou/${ref}`
         }),
         headers: {
           "Content-Type": "application/json"
@@ -165,6 +165,8 @@ class Welcome extends Component {
   // }
 
   generateQR = () => {
+    const { userInfo } = this.props
+    const { name, timestamp, tickets } = userInfo
     const base = this
     var canvas = document.getElementById('canvas')
     var barcodeContainer = document.querySelector('.barcode-image')
@@ -180,7 +182,7 @@ class Welcome extends Component {
       }
     }
     
-    QRCode.toCanvas(canvas, 'Deola is great', [opts], function (error) {
+    QRCode.toCanvas(canvas, `${name} bought ${tickets} tickets and registered at ${timestamp}`, [opts], function (error) {
       if (error) {
         console.error(error)
       } else {
@@ -236,7 +238,7 @@ class Welcome extends Component {
       <Aux>
         <Grid className={'welcome-container'}>
           <Grid.Column width={16}>
-            <Container style={{ marginTop: '20%' }}>
+            <Container className={'welcome-body'} style={{ marginTop: '20%' }}>
               {
                 user ?
 
@@ -271,19 +273,46 @@ class Welcome extends Component {
                         Get ready to have a great time this December at the event. 
                         Hope you have the following items ready.
                       </Header>
-                      <Container>
+                      <Container className={"ticket-section"}>
+                        <Header as="h3">
+                          Ticket
+                        </Header>
                         {
                           (userInfo && userInfo.qrCode) ?
 
-                          <div className="barcode-image">
-                            { 
-                              qrCode && 
-
-                              <img src={qrCode} alt="Ticket QR Code" />
-
-                            }
+                          <Grid stackable columns={2}>
+                            <Grid.Column>
+                              <div>
+                                <p>
+                                  {userInfo.name}
+                                  <br/>
+                                  {userInfo.email}
+                                  <br/>
+                                  This ticket admits {userInfo.tickets} attendee{userInfo.tickets > 1 && "s"}
+                                  <br/>
+                                  Date: 7 - DEC - 2019
+                                  <br/>
+                                  Venue: 49, Abiola Crescent off Toyin street Ikeja
+                                  <br/>
+                                  Time: 12pm
+                                </p>
+                              </div>
+                            </Grid.Column>
                             
-                          </div>
+                            <Grid.Column>
+                              <div style={{ textAlign: "right" }}>
+                                <div className="barcode-image">
+                                  { 
+                                    qrCode && 
+
+                                    <img src={qrCode} alt="Ticket QR Code" />
+
+                                  }
+                                  
+                                </div>
+                              </div>
+                            </Grid.Column>
+                          </Grid>
 
                           :
 

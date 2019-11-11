@@ -33,6 +33,7 @@
       h2.header {
         line-height: 1.1em;
         margin-top: 0;
+        font-size: 40px;
         margin-bottom: 20px;
         font-weight: 400;
         letter-spacing: normal;
@@ -100,6 +101,8 @@
 
   .ui.button {
     font-weight: 400;
+    border-radius: 60px;
+    padding: .9rem 1.6rem;
 
     &:hover {
       transform: translateY(-2px) scale(1.01);
@@ -108,16 +111,20 @@
 
     &.primary-main {
       color: $color-grey !important;
-      background-color: #fff !important;
+      background-color: #DAFFED !important;
+      font-weight: 500;
       border: none;
-      box-shadow: 0 0 3px 1px rgba(0,0,0,0.15);
+      text-transform: uppercase;
+      box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.15);
     }
   
     &.primary-sub {
       background-color: white !important;
       color: $color-primary !important;
       border: none;
-      box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.2);
+      text-transform: uppercase;
+      font-weight: 500;
+      box-shadow: 0px 2px 4px 1px rgba(0, 0, 0, 0.15);
       -webkit-transition: .2s cubic-bezier(.25,.1,.25,1);
       transition: .2s cubic-bezier(.25,.1,.25,1);
     }

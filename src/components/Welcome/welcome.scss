@@ -2,10 +2,15 @@
   min-height: 100vh;
   margin: 0;
   background-blend-mode: multiply;
-  background-color: #FF3CAC;
-  background-image: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+  background-color: #aaa;
+  background-blend-mode: multiply, multiply;
+  background-image: linear-gradient(90deg, #74EBD5 0%, #9FACE6 100%);
 
-  .container {
+  @media (max-width: 768px) {
+    background-color: #74EBD5;
+  }
+  
+  .container.welcome-body {
     margin-top: 10rem !important;
     padding: 2rem;
     border-radius: 10px;
@@ -32,6 +37,10 @@
 
     .generate-ticket {
       margin-left: 14px;
+    }
+
+    .container.ticket-section {
+      margin-top: 3rem;
     }
   }
 

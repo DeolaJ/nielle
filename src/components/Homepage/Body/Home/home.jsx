@@ -27,7 +27,7 @@ class Home extends Component {
                 element: '|',
                 hideWhenDone: true,
                 hideWhenDoneDelay: 1000,
-              }} avgTypingDelay={130}>
+              }} avgTypingDelay={100}>
                 Nielle's Backyard Cookout 
                 <br/>
                 &amp; Movie Night
@@ -46,6 +46,9 @@ class Home extends Component {
               </Typist>
             </Header>
             <div className={'header-content'}>
+              <p className={"venue-info"}>
+                7 December 2019 - Opebi, Lagos
+              </p>
               <p>
                 Get ready for an amazing experience with food, drinks, games and friends
               </p>
