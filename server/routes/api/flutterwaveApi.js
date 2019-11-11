@@ -9,7 +9,7 @@ module.exports = (app) => {
     return fetch("https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/hosted/pay", {
       method: 'POST',
       body: JSON.stringify({
-        "txref":req.body.reference,
+        "txref":"MR-1520442534487",
         "PBFPubKey":"FLWPUBK_TEST-ff9ddfa2ef023cbe71dbbd7da5aebbbf-X", 
         "customer_email": "adeola.adeyemoj@yahoo.com", 
         "amount": 1000, 

@@ -16,6 +16,7 @@ class ThankyouPage extends Component {
   }
   
   componentDidMount () {
+    const base = this
     const { match } = this.props
     const { reference } = match.params
     console.log(reference)
@@ -28,13 +29,46 @@ class ThankyouPage extends Component {
       })
     }
 
+    var refArray = reference.split('?');
+
     if (typeof reference) {
-      return axios.post('/flutterwave-verify', {
-        reference: reference
+      return axios({
+        method: 'post',
+        url: 'https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/verify',
+        data: JSON.stringify({
+        "txref":refArray[0],
+        "SECKEY":"FLWSECK_TEST-344f6f6da9f7840084921115d6f02a3d-X"
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
       }).then(response => {
         console.log(response)
+        const status = response.data.status
+        const tickets = (response.data.data.amount) / 1000
+        const success = status === "success" ? true : false
+        console.log(status, success, tickets)
+        base.setState({
+          success: success
+        }, () => {
+          this.sendToFirestore(tickets)
+        })
+      }).catch(error => {
+        console.log(error)
       })
     }
+  }
+
+  sendToFirestore = (tickets) => {
+      const { userID, setTickets, updateProfilePaid, db } = this.props
+
+      db.collection("userInfo").doc(userID).set({
+        tickets: tickets
+      }, { merge: true }).then(() => {
+        console.log("Ticket Updated")
+        setTickets(tickets)
+        updateProfilePaid()
+      });
   }
 
   render () {
@@ -45,28 +79,30 @@ class ThankyouPage extends Component {
       return <Redirect to="/" />
     }
 
+    console.log(this.state)
+
     return (
       <Aux>
         <Grid className={'thankyoupage-container'}>
           <Grid.Column width={16}>
             <Container textAlign='center' style={{ marginTop: '20%' }}>
               {
-                success ?
+                success === true &&
 
                 <Aux>
                   <Header as="h2">
                     Thank you for paying for a ticket. You will receive an email confirmation soon
                   </Header>
 
-                  <Header as="h3">
-                    However, if you will like to chat with someone now, click <a href="https://wa.me/2349057435025"  rel="noreferrer noopener" target={"_blank"}>here</a>
-                  </Header>
                   <Container>
-                    Return to <Link to="/welcome">dashboard</Link> to view your ticket
+                    Return to <Link to="/welcome">dashboard</Link> to generate your ticket
                   </Container>
                 </Aux>
 
-                : 
+              }
+
+              {
+                success === false &&
 
                 <Aux>
                   <Header as="h2">

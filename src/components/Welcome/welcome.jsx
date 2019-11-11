@@ -6,6 +6,7 @@ import Aux from '../../hoc/Aux'
 import firebase from '../../firebase'
 import axios from 'axios'
 import QRCode from 'qrcode'
+require('firebase/functions')
 
 class Welcome extends Component {
 
@@ -24,9 +25,12 @@ class Welcome extends Component {
     const { match, registerRemove, getUserInfo, userInfo } = this.props
     const { type } = match.params
     const db = firebase.firestore()
+
     console.log(type)
 
-    userInfo.qrCode && this.setState({ qrCode: userInfo.qrCode })
+    userInfo && userInfo.qrCode && this.setState({ qrCode: userInfo.qrCode })
+
+    userInfo && userInfo.tickets && this.setState({ tickets: userInfo.tickets })
 
     this.setState({
       db: db
@@ -54,16 +58,57 @@ class Welcome extends Component {
 
   handleClose = () => this.setState({ modalOpen: false })
 
+  // pay = () => {
+  //   // const { tickets } = this.state
+  //   // const { email, name, timestamp, gender } = this.props.userInfo
+  //   // var price = tickets && Number(tickets) * 1000
+  //   // const ref = this.getReference(name);
+
+  //   var pay = firebase.functions().httpsCallable('pay');
+
+  //   // if (typeof tickets) {
+  //   return pay({}).then(function(result) {
+  //     // Read result of the Cloud Function.
+  //     console.log(result)
+  //     // window.location.href = result.data.data.data.link;
+  //   }).catch(function(error) {
+  //     // Getting the Error details.
+  //     console.log(error)
+  //     // ...
+  //   });
+  // }
+
   payNow = () => {
     const { tickets } = this.state
     const { email, name, timestamp, gender } = this.props.userInfo
     var price = tickets && Number(tickets) * 1000
     const ref = this.getReference(name);
 
+    var functions = firebase.functions();
+
     if (typeof tickets) {
-      return axios.post('/flutterwave-initialize').then(response => {
+      
+      return axios({
+        method: 'post',
+        url: 'https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/hosted/pay',
+        data: JSON.stringify({
+          "txref":ref,
+          "PBFPubKey": "FLWPUBK_TEST-ff9ddfa2ef023cbe71dbbd7da5aebbbf-X", 
+          "customer_email": email, 
+          "amount": price, 
+          "currency": "NGN",
+          "meta": [{"name": name, "timestamp": timestamp, "gender": gender, "tickets": tickets }],
+          "redirect_url": `http://localhost:3000/thankyou/${ref}`
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => {
         console.log(response)
-        window.location.href = response.data.data.data.link
+        window.location.href = response.data.data.link
+      }).catch(error => {
+        console.log(error)
       })
         // {
         //   PBFPubKey: "",
@@ -167,7 +212,7 @@ class Welcome extends Component {
   }
 
   sendMail = () => {
-    return axios.post('/email-attendee',{
+    return axios.post('https://us-central1-nielle-19.cloudfunctions.net/api/email-attendee',{
       dest: 'adeola.adeyemoj@yahoo.com'
     }).then(response => {
       console.log(response)
@@ -209,35 +254,13 @@ class Welcome extends Component {
                         <div>How many tickets will you like to pay for?</div>
                       </Header>
 
-                      <Button onClick={this.generateQR}>Open Modal</Button>
-                      <Button onClick={this.sendMail}>Mail me</Button>
+                     <Button onClick={this.sendMail}>Mail me</Button>
                       <Form>
                         <Form.Field>
                           <Form.Input type="number" value={tickets} name="tickets" label={`N${price}`} placeholder='Enter a number' onChange={this.handleChange}/>
                         </Form.Field>
                         <Button className={'primary-main ticket-button'} onClick={this.payNow}>Proceed to pay</Button>
                       </Form>
-
-                      {
-                        qrCode ?
-
-                        <div className="barcode-image">
-                          { 
-                            qrCode && 
-
-                            <img src={qrCode} alt="Ticket QR Code" />
-
-                          }
-                          
-                        </div>
-
-                        :
-
-                        <Aux>
-                          <canvas id="canvas"></canvas>
-                          <div className='barcode-image'></div>
-                        </Aux>
-                      }
                       
                     </Aux>
 
@@ -249,9 +272,35 @@ class Welcome extends Component {
                         Hope you have the following items ready.
                       </Header>
                       <Container>
-                        <div>
-                          To view your ticket, click here
-                        </div>
+                        {
+                          (userInfo && userInfo.qrCode) ?
+
+                          <div className="barcode-image">
+                            { 
+                              qrCode && 
+
+                              <img src={qrCode} alt="Ticket QR Code" />
+
+                            }
+                            
+                          </div>
+
+                          :
+
+                          <Aux>
+                            {
+                              (userInfo && userInfo.tickets) &&
+
+                              <Aux>
+                                <div>
+                                  To generate your ticket, click  <Button className={'primary-main generate-ticket'} onClick={this.generateQR}>Generate Ticket</Button>
+                                </div>
+                                <canvas id="canvas"></canvas>
+                                <div className='barcode-image'></div>
+                              </Aux>
+                            }
+                          </Aux>
+                        }
                       </Container>
                     </Aux>
                   }

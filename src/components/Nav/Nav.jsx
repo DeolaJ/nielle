@@ -40,11 +40,6 @@ class Nav extends Component {
                   Dashboard
                 </List.Item>
               }
-              <List.Item>
-                <Link to='/order'>
-                  <Button className={'primary-main'} id="order" onClick={changeActiveState}>Get a Ticket</Button>
-                </Link>
-              </List.Item>
               {
                 loggedIn ?
 
@@ -54,11 +49,19 @@ class Nav extends Component {
 
                 :
 
-                <List.Item>
-                  <Link to='/login'>
-                    <Button className={'primary-main'}>Login</Button>
-                  </Link>
-                </List.Item>
+                <Aux>
+                  <List.Item>
+                    <Link to='/order'>
+                      <Button className={'primary-main'} id="order" onClick={changeActiveState}>Register for event</Button>
+                    </Link>
+                  </List.Item>
+
+                  <List.Item>
+                    <Link to='/login'>
+                      <Button className={'primary-main'}>Login</Button>
+                    </Link>
+                  </List.Item>
+                </Aux>
               }
             </List>
           </Aux>
@@ -78,7 +81,7 @@ class Nav extends Component {
               <Grid.Column textAlign='right'>
                 <Link to='/order'>
                   <Button className={'primary-main icon'} id="order" onClick={changeActiveState}>
-                    Buy Ticket
+                    Register
                   </Button>
                 </Link>
               </Grid.Column>

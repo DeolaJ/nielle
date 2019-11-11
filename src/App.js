@@ -217,11 +217,10 @@ class App extends Component {
       }).then(() => {
         console.log('yes')
         const { db } = this.state
-        const { email, name, description, gender, number, timestamp } = userInfo
+        const { email, name, gender, number, timestamp } = userInfo
         const doc = {
           "email": email,
           "name": name,
-          "description": description,
           "gender": gender,
           "number": number,
           "timestamp": timestamp
@@ -236,13 +235,15 @@ class App extends Component {
   }
 
   updateProfilePaid = () => {
-    firebase.auth().updateCurrentUser(FBUser => {
-      FBUser.updateProfile({
-        displayName: "true"
-      }).then(() => {
-        this.setState({
-          displayName: FBUser.displayName
-        })
+    var FBUser = firebase.auth().currentUser;
+
+    FBUser.updateProfile({
+      displayName: "true"
+    }).then(() => {
+      this.setState({
+        displayName: FBUser.displayName
+      }, () => {
+        this.setLocalStorage()
       })
     })
   }
@@ -254,6 +255,14 @@ class App extends Component {
   setQr = (qrCode) => {
     this.setState(prevState => ({
       userInfo: {...prevState.userInfo, qrCode}
+    }), () => {
+      this.setLocalStorage()
+    })
+  }
+
+  setTickets = (tickets) => {
+    this.setState(prevState => ({
+      userInfo: {...prevState.userInfo, tickets}
     }), () => {
       this.setLocalStorage()
     })
@@ -298,7 +307,7 @@ class App extends Component {
   }
  
   render () {
-    const { navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName, loggedIn, registerDone } = this.state
+    const { db, navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName, loggedIn, registerDone } = this.state
     console.log(this.state)
 
     console.log(process.env.FIREBASE_CONFIG)
@@ -339,7 +348,7 @@ class App extends Component {
                   : 
                     <Login {...props} user={user} loggedIn={loggedIn} />} 
                   />
-                <Route path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} updateProfilePaid={this.updateProfilePaid} loggedIn={loggedIn} />} />
+                <Route path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} db={db} userID={userID} setTickets={this.setTickets} updateProfilePaid={this.updateProfilePaid} loggedIn={loggedIn} />} />
                 <Route path={'/trackorders'} component={OrdersLoadable} loggedIn={loggedIn} />
                 <Route component={ErrorLoadable} loggedIn={loggedIn} />
               </Switch>

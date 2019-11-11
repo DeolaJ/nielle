@@ -29,9 +29,14 @@
       float: right;
       margin-top: 10px;
     }
+
+    .generate-ticket {
+      margin-left: 14px;
+    }
   }
 
   #canvas {
     height: auto;
+    display: none;
   }
 }

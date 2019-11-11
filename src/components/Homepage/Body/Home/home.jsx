@@ -54,7 +54,7 @@ class Home extends Component {
               <List.Item>
                 <Link to='/order'>
                   <Button size='large' color='blue' className={'primary-main'}>
-                    Get a Ticket
+                    Register for event
                   </Button>
                 </Link>
               </List.Item>

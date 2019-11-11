@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Form, Button, Container, Transition, TextArea, Message } from 'semantic-ui-react'
+import { Form, Button, Container, Transition, Divider, Header, Message } from 'semantic-ui-react'
 import Aux from '../../hoc/Aux'
 import firebase from '../../firebase'
 import Loader from '../Loader/loader'
@@ -12,8 +12,6 @@ class CheckoutForm extends Component {
       email: '',
       password: '',
       full_name: '',
-      description: '',
-      username: '',
       gender: '',
       number: '',
       errorMessage: null,
@@ -84,7 +82,7 @@ class CheckoutForm extends Component {
 
   orderNow = (e) => {
     e.preventDefault();
-    const { email, password, username, full_name, description, gender, number, formValid } = this.state
+    const { email, password, full_name, gender, number, formValid } = this.state
     const { registerUser, unloadForm } = this.props
     let timestamp = Date();
     timestamp = timestamp.toString();
@@ -94,9 +92,7 @@ class CheckoutForm extends Component {
 
     const userInfo = {
       email: email,
-      username: username,
       name: full_name,
-      description: description,
       gender: gender,
       number: number,
       timestamp: timestamp
@@ -124,8 +120,8 @@ class CheckoutForm extends Component {
   }
 
   render () {
-    const { gender, response, password, errorMessage, username,
-      email, full_name, description, number, loading, 
+    const { gender, response, password, errorMessage,
+      email, full_name, number, loading, 
     } = this.state
     
     const genders = [
@@ -145,8 +141,7 @@ class CheckoutForm extends Component {
               </p>
             </div>
           }
-          <Form.Input width={16} type="text" required label={"Full name"} value={full_name} name="full_name" placeholder='First name, Last name' onChange={this.handleChange} />
-          
+
           <Form.Input id={'email'} type="email" required label={"Email address"} value={email} name="email" placeholder='Enter your email address' onChange={this.handleChange} />
           <Message
             error
@@ -156,15 +151,17 @@ class CheckoutForm extends Component {
             <p>Email address is invalid</p>
           </Message>
 
-          <Form.Input width={16} type="text" required label={"Username"} value={username} name="username" placeholder='Choose a username' onChange={this.handleChange} />
           <Form.Input type="password" id={'password'} required label={"Password (to pay or view your tickets later)"} value={password} name="password" placeholder='Create a password' onChange={this.handleChange} />
-          <Form.Input type="number" id={'number'} required label={"Phone number"} value={number} name="number" placeholder='+234 - - - - - - - - - -' onChange={this.handleChange} />
+          
+          <Divider style={{ marginTop: "2rem" }} />
+          <Header as="h3">
+            Tell us a bit more about you
+          </Header>
+          <Form.Input width={16} type="text" required label={"Full name"} value={full_name} name="full_name" placeholder='First name, Last name' onChange={this.handleChange} />
+          
+          <Form.Input type="number" id={'number'} required label={"Phone number"} value={number} name="number" placeholder='080 - - - - - - - -' onChange={this.handleChange} />
           <Form.Select options={genders} label={"Gender (OPTIONAL)"} value={gender} name="gender" placeholder='Select Gender' onChange={this.handleChange} />
-          <Form.Field>
-            <label htmlFor={"description"}>Brief Description (OPTIONAL)</label>
-            <TextArea placeholder='Enter a brief description of your order' value={description} id={"description"} rows={2} name="description" onChange={this.handleChange}></TextArea>
-          </Form.Field>
-          <Button type='submit' className={'order-button'} floated="right" onClick={this.orderNow}>Place an Order</Button>
+          <Button type='submit' className={'order-button'} floated="right" onClick={this.orderNow}>Register for event</Button>
         </Form>
 
         {

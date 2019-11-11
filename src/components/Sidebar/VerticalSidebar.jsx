@@ -3,6 +3,7 @@ import { Icon, Sidebar, Menu, Button } from 'semantic-ui-react'
 import './Sidebar.scss'
 import { Link } from 'react-router-dom'
 import logo from "../../images/logomedium.png"
+import Aux from '../../hoc/Aux'
 
 class VerticalSidebar extends Component {
 
@@ -41,13 +42,6 @@ class VerticalSidebar extends Component {
             </Menu.Item>
           }
 
-          <Menu.Item as='div'>
-            <Link to='/order'>
-              <Button className={'primary-main mobile-menu'} id="order" onClick={changeActiveState}>
-                Get a Ticket
-              </Button>
-            </Link>
-          </Menu.Item>
           {
             loggedIn ?
 
@@ -57,11 +51,21 @@ class VerticalSidebar extends Component {
 
             :
 
-            <Menu.Item as='div' active={activeitem === 'login'}>
-              <Link to='/login'>
-                <Button className={'primary-main mobile-menu'} id={'login'} onClick={changeActiveState}>Login</Button>
-              </Link>
-            </Menu.Item>
+            <Aux>
+              <Menu.Item as='div'>
+                <Link to='/order'>
+                  <Button className={'primary-main mobile-menu'} id="order" onClick={changeActiveState}>
+                    Register for event
+                  </Button>
+                </Link>
+              </Menu.Item>
+
+              <Menu.Item as='div' active={activeitem === 'login'}>
+                <Link to='/login'>
+                  <Button className={'primary-main mobile-menu'} id={'login'} onClick={changeActiveState}>Login</Button>
+                </Link>
+              </Menu.Item>
+            </Aux>
           }
 
           <Menu.Item as='a' onClick={handleSidebar}> 
