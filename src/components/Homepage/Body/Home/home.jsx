@@ -2,16 +2,24 @@ import React, {Component} from 'react'
 import { Grid, Header, Container, List, Button } from 'semantic-ui-react'
 import './home.scss'
 import { Link } from 'react-router-dom'
-import homeIcon from '../../../../images/colorful.png'
+import homeIcon from '../../../../images/logo-large.png'
 
 class Home extends Component {
 
+  vendorScroll = () => {
+    const vendor = document.querySelector(".vendor-body")
+
+    vendor.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start',
+    })
+  }
 
   render () {
     const { mobile } = this.props
 
     return (
-      <Grid stackable className={'section home-container'} style={ mobile ? { backgroundImage: `url(${homeIcon})` } : null }>
+      <Grid stackable className={'section home-container'}>
 
         <div className={'illustration-banner hide-on-mobile'}>
           <div className={'home-illustration'} style={{ backgroundImage: `url(${homeIcon})`}}>
@@ -45,17 +53,15 @@ class Home extends Component {
             <List horizontal>
               <List.Item style={{ marginBottom: "1rem" }}>
                 <Link to='/order'>
-                  <Button size='large' color='blue' className={'medium primary-main'}>
+                  <Button size='large' className={'medium primary-main'}>
                     Purchase Ticket
                   </Button>
                 </Link>
               </List.Item>
               <List.Item>
-                <Link to='/contact'>
-                  <Button size='large' color='blue' className={'medium primary-main'}>
-                    Contact Us
-                  </Button>
-                </Link>
+                <Button size='large' onClick={this.vendorScroll} className={'medium primary-main'}>
+                  Vendors
+                </Button>
               </List.Item>
             </List>
           </Container>

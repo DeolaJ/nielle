@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Icon, Sidebar, Menu, Button } from 'semantic-ui-react'
 import './Sidebar.scss'
 import { Link } from 'react-router-dom'
-import logo from "../../images/logomedium.png"
+import logo from "../../images/logo-small.png"
 import Aux from '../../hoc/Aux'
 
 class VerticalSidebar extends Component {

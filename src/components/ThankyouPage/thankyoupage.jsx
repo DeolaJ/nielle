@@ -2,8 +2,8 @@ import React, {Component} from 'react'
 import { Grid, Container, Header } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import './thankyoupage.scss'
+import firebase from '../../firebase'
 import Aux from '../../hoc/Aux'
-import axios from 'axios'
 import Loader from '../Loader/loader'
 
 class ThankyouPage extends Component {
@@ -13,7 +13,9 @@ class ThankyouPage extends Component {
     this.state = {
       success: null,
       contact: null,
-      loading: true
+      loading: true,
+      vendorSuccess: null,
+      vendorFail: null,
     }
   }
   
@@ -30,20 +32,29 @@ class ThankyouPage extends Component {
       }, () => {
         this.endLoading()
       })
+    } else if (reference === "vendor-success") {
+      this.setState({
+        vendorSuccess: true
+      }, () => {
+        this.endLoading()
+      })
+    } else if (reference === "vendor-fail") {
+      this.setState({
+        vendorFail: true
+      }, () => {
+        this.endLoading()
+      })
     }
 
-    if ((typeof reference) && (reference !== "contact")) {
-      return axios({
-        method: 'post',
-        url: 'https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/verify',
-        data: JSON.stringify({
-        "txref":refArray[0],
-        "SECKEY":"FLWSECK_TEST-344f6f6da9f7840084921115d6f02a3d-X"
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(response => {
+    var verify = firebase.functions().httpsCallable('verify');
+
+    const data = {
+      txref: refArray[0]
+    }
+
+    if ((typeof reference) && (reference !== "contact") && (reference !== "vendor-success") && (reference !== "vendor-fail") ) {
+      return verify(data).then(response => {
+        console.log(data)
         const status = response.data.status
         const tickets = (response.data.data.amount) / 1000
         const success = status === "success" ? true : false
@@ -78,13 +89,14 @@ class ThankyouPage extends Component {
       }, { merge: true }).then(() => {
         console.log("Ticket Updated")
         setTickets(tickets)
+      }).then(() => {
         updateProfilePaid()
         this.endLoading()
       });
   }
 
   render () {
-    const { success, contact, loading } = this.state
+    const { success, contact, loading, vendorFail, vendorSuccess } = this.state
     const { loggedIn } = this.props
 
     if (loggedIn === false) {
@@ -133,6 +145,38 @@ class ThankyouPage extends Component {
               <Container textAlign='center' style={{ marginTop: '20%' }}>
                 <Header as="h2">
                   Thank you for reaching out to us. A member of the team will reach out to you soon
+                </Header>
+
+                <Container>
+                  Return to <Link to="/">Home</Link>
+                </Container>
+              </Container>
+
+            }
+
+
+            {
+              vendorSuccess === true &&
+
+              <Container textAlign='center' style={{ marginTop: '20%' }}>
+                <Header as="h2">
+                  Thank you for paying a a Vendor. A member of the team will reach out to you soon
+                </Header>
+
+                <Container>
+                  Return to <Link to="/">Home</Link>
+                </Container>
+              </Container>
+
+            }
+
+
+            {
+              vendorFail === true &&
+
+              <Container textAlign='center' style={{ marginTop: '20%' }}>
+                <Header as="h2">
+                  There was an issue with your payment. Please pay again using this <a href={"https://rave.flutterwave.com/pay/vendor-registration"} rel="noopener noreferer" target={"_blank"}>link</a>
                 </Header>
 
                 <Container>

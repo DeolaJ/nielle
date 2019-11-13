@@ -5,12 +5,12 @@
   background: rgba(0, 0, 0, .2);
 
   .illustration-banner {
-    right: -10%;
+    right: -2rem;
     position: absolute;
     left: unset;
-    width: 50vw;
-    height: 92vh;
-    top: 8vh;
+    width: 41vw;
+    height: 55vh;
+    top: 42vh;
   }
 
   .home-illustration {
@@ -89,6 +89,13 @@
     
     .home-content-container {
       margin-top: 32vh;
+    }
+  }
+
+  @media (max-width: 1120px) {
+
+    .illustration-banner {
+      display: none;
     }
   }
 

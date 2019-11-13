@@ -3,8 +3,8 @@ import './Nav.scss'
 import { Icon, List, Grid, Button } from 'semantic-ui-react'
 import { Link } from 'react-router-dom'
 import Aux from '../../hoc/Aux'
-import logowhite from '../../images/logowhite.png'
-import logowhitesmall from '../../images/logowhitemedium.png'
+import logo from '../../images/logo-small.png'
+import logosmall from '../../images/logo-xsmall.png'
 
 class Nav extends Component {
 
@@ -18,7 +18,7 @@ class Nav extends Component {
           !mobile ?
           <Aux>
             <div className={'logo'}>
-              <img alt='logo icon' className={'logo-icon'} src={logowhite} />
+              <img alt='logo icon' className={'logo-icon'} src={logo} />
             </div>
             <List horizontal link className={'navLink'}>
               {
@@ -74,8 +74,8 @@ class Nav extends Component {
                 <Icon onClick={handleSidebar} size='big' name='bars'/>
               </Grid.Column>
 
-              <Grid.Column as={Link} to={"/"} textAlign='right' verticalAlign='middle' style={{ position: 'relative', height: '55px', overflow: 'hidden' }}>
-                <img alt='logo icon' className={'mobile-logo'} src={logowhitesmall}/>
+              <Grid.Column as={Link} to={"/"} textAlign='right' verticalAlign='middle'>
+                <img alt='logo icon' className={'mobile-logo'} src={logosmall}/>
               </Grid.Column>
 
             </Grid.Row>

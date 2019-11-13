@@ -35,9 +35,7 @@
     }
 
     .mobile-logo {
-      position: absolute;
-      transform: translate(10%, -41%);
-      left: 0;
+      height: 65px;
     }
   }
 
@@ -59,17 +57,16 @@
     z-index: -1;
 
     .logo-icon {
-      width: 200px;
-      margin-left: 2rem;
-      margin-top: -6rem;
+      width: 100px;
+      margin-left: 4rem;
+      margin-top: -1rem;
     }
   }
 }
 
 @media (max-width: 768px) {
   .nav {
-    padding: 30px 1em;
-    padding-right: 1em;
+    padding: 30px 2em;
     text-align: left;
 
     .item {

@@ -14,6 +14,7 @@ import OrderPage from './components/OrderPage/orderpage'
 import Welcome from './components/Welcome/welcome'
 import firebase from 'firebase'
 import ThankyouPage from './components/ThankyouPage/thankyoupage'
+import Vendors from './components/Vendors/vendors'
 import Aux from './hoc/Aux'
 import Login from './components/Login/login'
 
@@ -318,6 +319,7 @@ class App extends Component {
                   />
                 <Route path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} mobile={mobile} db={db} userID={userID} setTickets={this.setTickets} updateProfilePaid={this.updateProfilePaid} loggedIn={loggedIn} />} />
                 <Route path={'/trackorders'} component={OrdersLoadable} loggedIn={loggedIn} />
+                <Route path={'/vendors'} render={(props) => <Vendors {...props} mobile={mobile} loggedIn={loggedIn} />} />
                 <Route component={ErrorLoadable} loggedIn={loggedIn} />
               </Switch>
             </Sidebar.Pusher>

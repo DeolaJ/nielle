@@ -64,27 +64,22 @@ class Welcome extends Component {
     const { email, name, timestamp, gender } = this.props.userInfo
     var price = tickets && Number(tickets) * 1000
     const ref = this.getReference(name);
+    var pay = firebase.functions().httpsCallable('pay');
+    var data = {
+      email: email,
+      name: name,
+      timestamp: timestamp,
+      gender: gender,
+      price: price,
+      tickets: tickets,
+      ref: ref
+    }
+
+    console.log(data)
 
     if (typeof tickets) {
       this.startLoading()
-      return axios({
-        method: 'post',
-        url: 'https://api.ravepay.co/flwv3-pug/getpaidx/api/v2/hosted/pay',
-        data: JSON.stringify({
-          "txref":ref,
-          "PBFPubKey": "FLWPUBK_TEST-ff9ddfa2ef023cbe71dbbd7da5aebbbf-X", 
-          "customer_email": email, 
-          "amount": price, 
-          "currency": "NGN",
-          "meta": [{"name": name, "timestamp": timestamp, "gender": gender, "tickets": tickets }],
-          "redirect_url": `https://nielle-19.firebaseapp.com/thankyou/${ref}`
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      .then(response => {
-        console.log(response)
+      pay(data).then(response => {
         this.endLoading()
         window.location.href = response.data.data.link
       }).catch(error => {
@@ -160,6 +155,7 @@ class Welcome extends Component {
         <Grid className={'welcome-container'}>
           <Grid.Column width={16}>
             <Container className={'welcome-body'} style={{ marginTop: '20%' }}>
+            <Button onClick={this.testapi}>Test keys</Button>
               {
                 user ?
 
@@ -239,7 +235,7 @@ class Welcome extends Component {
 
                           :
 
-                          <Aux>
+                          <div>
                             {
                               (userInfo && userInfo.tickets) &&
 
@@ -251,7 +247,7 @@ class Welcome extends Component {
                                 <div className='barcode-image'></div>
                               </Aux>
                             }
-                          </Aux>
+                          </div>
                         }
                       </Container>
                     </Aux>
