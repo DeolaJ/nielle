@@ -11,11 +11,14 @@ class Footer extends Component {
   }
 
   render () {
+    const { activeitem } = this.props
 
     return (
-      <footer className={'footer'}>
-        <div className={'copyright'}>
-          &copy; Copyright <span className={'footer-year'}></span> Nielle's Backyard Cookout 
+      <footer className={ activeitem === 'home' ? 'home footer': 'footer'}>
+        <div className={'footer-container'}>
+            <div className={'copyright'}>
+              &copy; Copyright <span className={'footer-year'}></span> Nielle's Backyard Cookout 
+            </div>
         </div>
       </footer>
     )

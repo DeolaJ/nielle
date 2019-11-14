@@ -278,7 +278,7 @@ class App extends Component {
   }
  
   render () {
-    const { db, navItems, mobile, animation, activeitem, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName, loggedIn, registerDone } = this.state
+    const { db, navItems, mobile, activeitem, animation, dimmed, direction, visible, navVisible, user, userID, userInfo, displayName, loggedIn, registerDone } = this.state
 
     return (
       <div className={'body'}>
@@ -325,7 +325,7 @@ class App extends Component {
             </Sidebar.Pusher>
           </Sidebar.Pushable>
           
-          <Footer/>
+          <Footer activeitem={activeitem}/>
         </Router>
 
       </div>

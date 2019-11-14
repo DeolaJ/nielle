@@ -102,7 +102,7 @@ exports.verify = functions.https.onCall((data, context) => {
     method: 'POST',
     body: JSON.stringify({
       "txref":txref,
-      "SECKEY":"FLWSECK-e5ea6abd42e474557fbc637ac22a9be9-X"
+      "SECKEY":functions.config().flutterwave.testseckey
       }),
     headers: {
       "Content-Type": "application/json"
@@ -126,12 +126,12 @@ exports.pay = functions.https.onCall((data, context) => {
     method: 'POST',
     body: JSON.stringify({
       "txref":ref,
-      "PBFPubKey": "FLWPUBK-7454141e94c43130fba846f1c783bbcb-X", 
+      "PBFPubKey":functions.config().flutterwave.testpubkey, 
       "customer_email": email, 
       "amount": price, 
       "currency": "NGN",
       "meta": [{"name": name, "timestamp": timestamp, "gender": gender, "tickets": tickets }],
-      "redirect_url": `https://nielle-19.firebaseapp.com/thankyou/${ref}`
+      "redirect_url": `https://niellescookout.com/thankyou/${ref}`
     }),
     headers: {
       "Content-Type": "application/json"

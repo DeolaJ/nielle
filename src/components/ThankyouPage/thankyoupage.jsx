@@ -16,6 +16,7 @@ class ThankyouPage extends Component {
       loading: true,
       vendorSuccess: null,
       vendorFail: null,
+      tickets: null
     }
   }
   
@@ -56,7 +57,7 @@ class ThankyouPage extends Component {
       return verify(data).then(response => {
         console.log(data)
         const status = response.data.status
-        const tickets = (response.data.data.amount) / 1000
+        const tickets = Math.floor((response.data.data.amount) / 1000)
         const success = status === "success" ? true : false
         base.setState({
           success: success
@@ -75,9 +76,10 @@ class ThankyouPage extends Component {
     }
   }
   
-  endLoading = () => {
+  endLoading = (tickets) => {
     this.setState({
       loading: false,
+      tickets: tickets ? tickets : null
     })
   }
 
@@ -91,12 +93,12 @@ class ThankyouPage extends Component {
         setTickets(tickets)
       }).then(() => {
         updateProfilePaid()
-        this.endLoading()
+        this.endLoading(tickets)
       });
   }
 
   render () {
-    const { success, contact, loading, vendorFail, vendorSuccess } = this.state
+    const { success, contact, loading, vendorFail, vendorSuccess, tickets } = this.state
     const { loggedIn } = this.props
 
     if (loggedIn === false) {
@@ -109,7 +111,7 @@ class ThankyouPage extends Component {
           <Grid.Column width={16}>
 
             {
-              success === true &&
+              success === true && tickets &&
 
               <Container textAlign='center' style={{ marginTop: '20%' }}>
                 <Header as="h2">
@@ -124,7 +126,7 @@ class ThankyouPage extends Component {
             }
 
             {
-              success === false &&
+              success === false && 
 
               <Container textAlign='center' style={{ marginTop: '20%' }}>
                 <Header as="h2">
