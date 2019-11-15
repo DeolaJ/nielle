@@ -25,6 +25,11 @@
       background-blend-mode: overlay;
     }
 
+    .logos svg { 
+      fill: white;
+      color: white;
+    }
+
     @media (max-width: 768px) {
 
       background-color: #ee0979;
@@ -46,6 +51,21 @@
     .footer-container {
       padding: 2rem 0;
       width: 100%;
+    }
+  }
+
+  .logos {
+    display: flex;
+    width: 100px;
+    justify-content: space-around;
+    margin: 0 auto;
+    margin-top: 1rem;
+
+    svg {
+      width: 30px;
+      height: 30px;
+      color: #373f51;
+      fill: #373f51;
     }
   }
 

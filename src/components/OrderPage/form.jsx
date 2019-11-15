@@ -123,8 +123,6 @@ class CheckoutForm extends Component {
     const { gender, response, password, errorMessage,
       email, full_name, number, loading, 
     } = this.state
-
-    console.log(this.state)
     
     const genders = [
       { key: 'm', text: 'Male', value: 'Male' },
@@ -179,7 +177,7 @@ class CheckoutForm extends Component {
         {
           loading && 
 
-          <Loader loading={loading} message={"Registration in Progress"} />
+          <Loader loading={loading} message={"Registration in Progress. Do not refresh"} />
         }
 
       </Aux>

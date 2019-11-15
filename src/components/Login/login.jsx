@@ -27,6 +27,13 @@ class Login extends Component {
     this.handleChange = this.handleChange.bind(this)
   }
 
+  componentDidMount () {
+
+    const { setActive } = this.props
+
+    setActive('login')
+  }
+
   startLoading = () => {
     this.setState({
       loading: true

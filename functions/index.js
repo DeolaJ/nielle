@@ -102,7 +102,7 @@ exports.verify = functions.https.onCall((data, context) => {
     method: 'POST',
     body: JSON.stringify({
       "txref":txref,
-      "SECKEY":functions.config().flutterwave.testseckey
+      "SECKEY":functions.config().flutterwave.seckey
       }),
     headers: {
       "Content-Type": "application/json"
@@ -126,7 +126,7 @@ exports.pay = functions.https.onCall((data, context) => {
     method: 'POST',
     body: JSON.stringify({
       "txref":ref,
-      "PBFPubKey":functions.config().flutterwave.testpubkey, 
+      "PBFPubKey":functions.config().flutterwave.pubkey, 
       "customer_email": email, 
       "amount": price, 
       "currency": "NGN",

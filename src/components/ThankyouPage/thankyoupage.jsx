@@ -56,9 +56,9 @@ class ThankyouPage extends Component {
     if ((typeof reference) && (reference !== "contact") && (reference !== "vendor-success") && (reference !== "vendor-fail") ) {
       return verify(data).then(response => {
         console.log(data)
-        const status = response.data.status
+        const status = response.data.data.status
         const tickets = Math.floor((response.data.data.amount) / 1000)
-        const success = status === "success" ? true : false
+        const success = status && (status === "successful") ? true : false
         base.setState({
           success: success
         }, () => {
@@ -191,7 +191,7 @@ class ThankyouPage extends Component {
             {
               loading && 
 
-              <Loader loading={loading} message={"Please wait"} />
+              <Loader loading={loading} message={"Hold tight, while we update your details"} />
             }
 
           </Grid.Column>

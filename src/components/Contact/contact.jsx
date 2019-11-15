@@ -24,6 +24,12 @@ class Contact extends Component {
     this.endLoading = this.endLoading.bind(this)
   }
 
+  componentDidMount () {
+    const { setActive } = this.props
+
+    setActive('contact')
+  }
+
   startLoading = () => {
     this.setState({
       loading: true

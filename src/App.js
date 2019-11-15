@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import './App.scss'
-import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import 'semantic-ui-css/semantic.min.css'
 import { Sidebar, Segment } from "semantic-ui-react"
 import Loadable from 'react-loadable';
@@ -15,7 +15,6 @@ import Welcome from './components/Welcome/welcome'
 import firebase from 'firebase'
 import ThankyouPage from './components/ThankyouPage/thankyoupage'
 import Vendors from './components/Vendors/vendors'
-import Aux from './hoc/Aux'
 import Login from './components/Login/login'
 
 // const HomepageLoadable = Loadable({
@@ -190,6 +189,12 @@ class App extends Component {
     
   }
 
+  setActive = (item) => {
+    this.setState({
+      activeitem: item
+    })
+  }
+
   updateValue = () => {
     const body = document.querySelector('body').clientWidth
     const mobile = body <= 768 ? true : false
@@ -294,18 +299,18 @@ class App extends Component {
                 <Route exact path={'/'} render={(props) => <Homepage {...props} user={user} loggedIn={loggedIn} mobile={mobile} />} />
                 
                 
-                <Route path={'/login'} render={(props) => <Login {...props} user={user} loggedIn={loggedIn} />} />
-                <Route path={'/contact'} render={(props) => <Contact {...props} user={user} loggedIn={loggedIn} mobile={mobile} db={db} />} />
-                <Route path={'/order'} render={(props) => <OrderPage {...props} registerUser={this.registerUser} loggedIn={loggedIn} registerDone={registerDone} mobile={mobile} /> } />
+                <Route path={'/login'} render={(props) => <Login {...props} user={user} loggedIn={loggedIn} setActive={this.setActive}/>} />
+                <Route path={'/contact'} render={(props) => <Contact {...props} user={user} loggedIn={loggedIn} mobile={mobile} db={db} setActive={this.setActive} />} />
+                <Route path={'/order'} render={(props) => <OrderPage {...props} registerUser={this.registerUser} loggedIn={loggedIn} registerDone={registerDone} mobile={mobile} setActive={this.setActive} /> } />
                 
                 <Route path={'/welcome/:type'} render={(props) => user 
                   ? 
                     <Welcome {...props} user={user} userInfo={userInfo} mobile={mobile} db={db}
                     userID={userID} displayName={displayName} setNewUser={this.setNewUser} 
                     getUserInfo={this.getUserInfo} logOutUser={this.logOutUser} setQr={this.setQr} 
-                    loggedIn={loggedIn} registerRemove={this.registerRemove} /> 
+                    loggedIn={loggedIn} registerRemove={this.registerRemove} setActive={this.setActive} /> 
                   : 
-                    <Login {...props} user={user} loggedIn={loggedIn} />} 
+                    <Login {...props} user={user} setActive={this.setActive} loggedIn={loggedIn} />} 
                   />
                 
                 <Route path={'/welcome'} render={(props) => user 
@@ -313,9 +318,9 @@ class App extends Component {
                     <Welcome {...props} user={user} userInfo={userInfo} userID={userID} mobile={mobile} db={db}
                     displayName={displayName} setNewUser={this.setNewUser} setQr={this.setQr} 
                     getUserInfo={this.getUserInfo} loggedIn={loggedIn} logOutUser={this.logOutUser} 
-                    registerRemove={this.registerRemove} /> 
+                    registerRemove={this.registerRemove} setActive={this.setActive} /> 
                   : 
-                    <Login {...props} user={user} loggedIn={loggedIn} />} 
+                    <Login {...props} user={user} setActive={this.setActive} loggedIn={loggedIn} />} 
                   />
                 <Route path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} mobile={mobile} db={db} userID={userID} setTickets={this.setTickets} updateProfilePaid={this.updateProfilePaid} loggedIn={loggedIn} />} />
                 <Route path={'/trackorders'} component={OrdersLoadable} loggedIn={loggedIn} />

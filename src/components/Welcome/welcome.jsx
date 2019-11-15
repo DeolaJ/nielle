@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Grid, Container, Header, Button, Modal, Form } from 'semantic-ui-react'
+import { Grid, Container, Header, Button, Form } from 'semantic-ui-react'
 import { Link, Redirect } from 'react-router-dom'
 import './welcome.scss'
 import Aux from '../../hoc/Aux'
@@ -22,13 +22,14 @@ class Welcome extends Component {
   }
   
   componentDidMount () {
-    const { match, registerRemove, getUserInfo, userInfo } = this.props
+    const { match, registerRemove, getUserInfo, userInfo, setActive } = this.props
     const { type } = match.params
 
     userInfo && userInfo.qrCode && this.setState({ qrCode: userInfo.qrCode })
 
     userInfo && userInfo.tickets && this.setState({ tickets: userInfo.tickets })
 
+    setActive('dashboard')
   
     if (type === "newuser") {
       registerRemove()
@@ -155,7 +156,6 @@ class Welcome extends Component {
         <Grid className={'welcome-container'}>
           <Grid.Column width={16}>
             <Container className={'welcome-body'} style={{ marginTop: '20%' }}>
-            <Button onClick={this.testapi}>Test keys</Button>
               {
                 user ?
 

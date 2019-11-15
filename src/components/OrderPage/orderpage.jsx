@@ -32,6 +32,10 @@ class OrderPage extends PureComponent {
         db
       })
     }
+
+    const { setActive } = this.props
+
+    setActive('order')
   }
 
   updateValue = () => {
