@@ -4,6 +4,12 @@ import './vendors.scss'
 
 class Vendors extends Component {
 
+  componentDidMount () {
+    const { setActive } = this.props
+
+    setActive('vendors')
+  }
+
   render () {
     const { mobile } = this.props
 

@@ -306,7 +306,7 @@ class App extends Component {
                 <Route path={'/welcome/:type'} render={(props) => user 
                   ? 
                     <Welcome {...props} user={user} userInfo={userInfo} mobile={mobile} db={db}
-                    userID={userID} displayName={displayName} setNewUser={this.setNewUser} 
+                    userID={userID} displayName={displayName} setNewUser={this.setNewUser} updateProfilePaid={this.updateProfilePaid} 
                     getUserInfo={this.getUserInfo} logOutUser={this.logOutUser} setQr={this.setQr} 
                     loggedIn={loggedIn} registerRemove={this.registerRemove} setActive={this.setActive} /> 
                   : 
@@ -316,7 +316,7 @@ class App extends Component {
                 <Route path={'/welcome'} render={(props) => user 
                   ? 
                     <Welcome {...props} user={user} userInfo={userInfo} userID={userID} mobile={mobile} db={db}
-                    displayName={displayName} setNewUser={this.setNewUser} setQr={this.setQr} 
+                    displayName={displayName} setNewUser={this.setNewUser} setQr={this.setQr}  updateProfilePaid={this.updateProfilePaid}
                     getUserInfo={this.getUserInfo} loggedIn={loggedIn} logOutUser={this.logOutUser} 
                     registerRemove={this.registerRemove} setActive={this.setActive} /> 
                   : 
@@ -324,7 +324,7 @@ class App extends Component {
                   />
                 <Route path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} mobile={mobile} db={db} userID={userID} setTickets={this.setTickets} updateProfilePaid={this.updateProfilePaid} loggedIn={loggedIn} />} />
                 <Route path={'/trackorders'} component={OrdersLoadable} loggedIn={loggedIn} />
-                <Route path={'/vendors'} render={(props) => <Vendors {...props} mobile={mobile} loggedIn={loggedIn} />} />
+                <Route path={'/vendors'} render={(props) => <Vendors {...props} setActive={this.setActive} mobile={mobile} loggedIn={loggedIn} />} />
                 <Route component={ErrorLoadable} loggedIn={loggedIn} />
               </Switch>
             </Sidebar.Pusher>

@@ -141,6 +141,14 @@ class Welcome extends Component {
     })
   }
 
+  componentDidUpdate () {
+    const { userInfo, updateProfilePaid, displayName } = this.props
+
+    if (userInfo && userInfo.tickets && (displayName === 'false')) {
+      updateProfilePaid()
+    }
+  }
+
   render () {
     const { user, displayName, userInfo, loggedIn, mobile } = this.props
     const { tickets, qrCode, loading } = this.state
