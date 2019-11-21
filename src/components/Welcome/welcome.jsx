@@ -35,7 +35,7 @@ class Welcome extends Component {
     if (type === "newuser") {
       registerRemove()
     } else {
-      !userInfo && getUserInfo()
+      getUserInfo()
     }
   }
 
@@ -113,9 +113,9 @@ class Welcome extends Component {
   }
 
   generateQR = () => {
+    const base = this
     const { userInfo } = this.props
     const { name, timestamp, tickets } = userInfo
-    const base = this
     var canvas = document.getElementById('canvas')
     var barcodeContainer = document.querySelector('.barcode-image')
     
@@ -128,7 +128,7 @@ class Welcome extends Component {
         var dataUrl = canvas.toDataURL();
         var imageFoo = document.createElement('img');
         imageFoo.src = dataUrl;
-        this.updateMailchimp(dataUrl);
+        base.updateMailchimp(dataUrl);
         barcodeContainer.appendChild(imageFoo);
         base.setState({
           qrCode: dataUrl
