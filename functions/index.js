@@ -6,6 +6,8 @@ const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const smtpTransport = require('nodemailer-smtp-transport');
 const fetch = require('node-fetch');
+const MailchimpApi = require('mailchimp-api-v3');
+const md5 = require('crypto-js/md5');
 
 const app = express();
 
@@ -14,84 +16,27 @@ app.use(bodyParser.json());
 
 admin.initializeApp(functions.config().firebase);
 
-// app.post('/email-attendee', (req, res) => {
-//   // console.log(req.body)
-//   // console.log('Request was made oooh')
+const mailchimpApi = new MailchimpApi(functions.config().mailchimp.api)
+const audienceId = functions.config().mailchimp.audience
 
-//   // let transporter = nodemailer.createTransport({
-//   //   service: 'gmail',
-//   //   auth: {
-//   //       user: 'adejoe97@gmail.com',
-//   //       pass: 'dejoeart9715'
-//   //   }
-//   // });
-    
-//   // const dest = req.body.dest;
+exports.mailchimp = functions.https.onCall((data, context) => {
 
-//   // const mailOptions = {
-//   //     from: 'Adeola <adejoe97@gmail.com>', // Something like: Jane Doe <janedoe@gmail.com>
-//   //     to: dest,
-//   //     subject: 'I\'M A PICKLE!!!', // email subject
-//   //     html: `<p style="font-size: 16px;">Pickle Riiiiiiiiiiiiiiiick!!</p>
-//   //         <br />
-//   //         <img src="https://images.prod.meredith.com/product/fc8754735c8a9b4aebb786278e7265a5/1538025388228/l/rick-and-morty-pickle-rick-sticker" />
-//   //     ` // email content in HTML
-//   // };
+  const { userInfo, ticket } = data
+  const body = {
+    'status': 'subscribed',
+    'merge_fields': {
+      "TICKET": ticket
+    },
+    'interests': {
+      'bf58f68599': true,
+      '03b557ad6d': false
+    }
+  }
+  const memberId = md5(userInfo.email.toLowerCase());
 
-//   // return transporter.sendMail(mailOptions, (erro, info) => {
-//   //     if(erro){
-//   //         return res.send(erro.toString());
-//   //     }
-//   //     return res.send('Sended');
-//   // });
+  return mailchimpApi.patch(`/lists/${audienceId}/members/${memberId}`, body);
 
-//   return cors(req, res, () => {
-//     var text = `<div>
-//       <h4>Information</h4>
-//       <ul>
-//         <li>
-//           Name -  Adeola
-//         </li>
-//         <li>
-//           Email - meme
-//         </li>
-//         <li>
-//           Phone - 012
-//         </li>
-//       </ul>
-//       <h4>Message</h4>
-//       <p>Helloo</p>
-//     </div>`;
-//      var sesAccessKey = 'adejoe97@gmail.com';
-//      var sesSecretKey = 'dejoeart9715';
-
-//      var transporter = nodemailer.createTransport(smtpTransport({
-//       service: 'gmail',
-//       auth: {
-//           user: sesAccessKey,
-//           pass: sesSecretKey
-//       }
-//     }));
-//     const mailOptions = {
-//       to: "adeola.adeyemoj@yahoo.com",
-//       from: "no-reply@myemail.com",
-//       subject: `Adeola sent you a new message`,
-//       text: text,
-//       html: text
-//     };
-    
-//     transporter.sendMail(mailOptions, function(error, info){
-//      if(error){
-//         console.log(error.message);
-//      }
-//      res.status(200).send({
-//        message: "success"
-//      })
-//     });
-//   }).catch(() => {
-//     res.status(500).send("error, I hate this stuff");
-//   });
-// }); 
+})
 
 exports.api = functions.https.onRequest(app);
 

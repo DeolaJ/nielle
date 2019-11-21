@@ -68,6 +68,12 @@
         margin-bottom: 1rem;
         text-transform: uppercase;
         font-weight: 700;
+
+        .sub {
+          font-size: 13px;
+          font-weight: 400;
+          text-transform: initial;
+        }
       }
     }
 

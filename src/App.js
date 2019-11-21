@@ -15,7 +15,9 @@ import Welcome from './components/Welcome/welcome'
 import firebase from 'firebase'
 import ThankyouPage from './components/ThankyouPage/thankyoupage'
 import Vendors from './components/Vendors/vendors'
+import MoviePoll from './components/MoviePoll/moviepoll'
 import Login from './components/Login/login'
+import NielleAdmin from './components/NielleAdmin/nielleadmin'
 
 // const HomepageLoadable = Loadable({
 //   loader: () => import('./components/Homepage/homepage'),
@@ -79,7 +81,7 @@ class App extends Component {
     dimmed: true,
     visible: false,
     navVisible: true,
-    activeitem: "",
+    activeitem: "home",
     user: null,
     userID: null,
     displayName: null,
@@ -98,7 +100,7 @@ class App extends Component {
       db
     })
 
-    this.setState(url.includes("contact") ? { activeitem: "contact"} : (url.includes("payment") ? { activeitem: "contact"} : { activeitem: "home"}))
+    this.setState(url.includes("contact") ? { activeitem: "contact"} : (url.includes("payment") ? { activeitem: "contact"} : null))
 
     if (body <= 768 ) {
       this.setState({
@@ -325,6 +327,8 @@ class App extends Component {
                 <Route path={'/thankyou/:reference'} render={(props) => <ThankyouPage {...props} mobile={mobile} db={db} userID={userID} setTickets={this.setTickets} updateProfilePaid={this.updateProfilePaid} loggedIn={loggedIn} />} />
                 <Route path={'/trackorders'} component={OrdersLoadable} loggedIn={loggedIn} />
                 <Route path={'/vendors'} render={(props) => <Vendors {...props} setActive={this.setActive} mobile={mobile} loggedIn={loggedIn} />} />
+                <Route path={'/movie-poll'} render={(props) => <MoviePoll {...props} setActive={this.setActive} mobile={mobile} loggedIn={loggedIn} />} />
+                <Route path={'/nielle-admin'} render={(props) => <NielleAdmin {...props} user={user} userInfo={userInfo} setActive={this.setActive} mobile={mobile} loggedIn={loggedIn} />} />
                 <Route component={ErrorLoadable} loggedIn={loggedIn} />
               </Switch>
             </Sidebar.Pusher>

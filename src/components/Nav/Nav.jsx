@@ -40,6 +40,13 @@ class Nav extends Component {
                   Dashboard
                 </List.Item>
               }
+
+                <List.Item>
+                  <Link to='/movie-poll'>
+                    <Button className={'primary-main'} id="movie-poll" onClick={changeActiveState}>Movie Poll</Button>
+                  </Link>
+                </List.Item>
+                
               {
                 loggedIn ?
 

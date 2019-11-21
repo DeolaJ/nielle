@@ -153,10 +153,10 @@ class CheckoutForm extends Component {
 
           <Form.Input type="password" id={'password'} required label={"Password (to pay or view your tickets later)"} value={password} name="password" placeholder='Create a password' onChange={this.handleChange} />
           
-          <Divider style={{ marginTop: "2rem" }} />
-          <Header as="h3">
+          <Header as="h3" style={{ marginTop: "3rem" }}>
             Tell us a bit more about you
           </Header>
+          <Divider style={{ marginTop: ".5rem", marginBottom: "2rem" }} />
           <Form.Input width={16} type="text" required label={"Full name"} value={full_name} name="full_name" placeholder='First name, Last name' onChange={this.handleChange} />
           
           <Form.Input type="number" id={'number'} required label={"Phone number"} value={number} name="number" placeholder='080 - - - - - - - -' onChange={this.handleChange} />

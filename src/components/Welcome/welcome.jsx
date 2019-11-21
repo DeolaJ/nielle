@@ -17,7 +17,8 @@ class Welcome extends Component {
       modalOpen: false,
       newUser: false,
       tickets: "",
-      qrCode: null
+      qrCode: null,
+      mailchimp: null
     }
   }
   
@@ -34,7 +35,7 @@ class Welcome extends Component {
     if (type === "newuser") {
       registerRemove()
     } else {
-      getUserInfo()
+      !userInfo && getUserInfo()
     }
   }
 
@@ -93,6 +94,24 @@ class Welcome extends Component {
     this.setState({ [name]: value })
   }
 
+
+  updateMailchimp = (ticket) => {
+    const { userInfo } = this.props
+    var mailchimp = firebase.functions().httpsCallable('mailchimp');
+    const data = {
+      userInfo: userInfo,
+      ticket: ticket
+    }
+
+    return mailchimp(data).then(response => {
+      this.setState({
+        mailchimp: "done"
+      })
+    }).catch(error => {
+      console.log(error)
+    })
+  }
+
   generateQR = () => {
     const { userInfo } = this.props
     const { name, timestamp, tickets } = userInfo
@@ -109,6 +128,7 @@ class Welcome extends Component {
         var dataUrl = canvas.toDataURL();
         var imageFoo = document.createElement('img');
         imageFoo.src = dataUrl;
+        this.updateMailchimp(dataUrl);
         barcodeContainer.appendChild(imageFoo);
         base.setState({
           qrCode: dataUrl
@@ -129,16 +149,6 @@ class Welcome extends Component {
       console.log("Document successfully written!")
       setQr(qrCode)
     });
-  }
-
-  sendMail = () => {
-    return axios.post('https://us-central1-nielle-19.cloudfunctions.net/api/email-attendee',{
-      dest: 'adeola.adeyemoj@yahoo.com'
-    }).then(response => {
-      console.log(response)
-    }).catch(error => {
-      console.log(error)
-    })
   }
 
   componentDidUpdate () {
@@ -181,6 +191,7 @@ class Welcome extends Component {
     
                         <Header as="h3">
                           Step 2 - Buy Ticket <span className={"ticket-cost"}>{FinalPrice}</span>
+                          <Header.Subheader><em>Transaction charges apply based on payment method</em></Header.Subheader>
                         </Header>
 
                         <Form>

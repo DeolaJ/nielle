@@ -42,6 +42,14 @@ class VerticalSidebar extends Component {
             </Menu.Item>
           }
 
+            <Menu.Item as='div'>
+              <Link to='/movie-poll'>
+                <Button className={'primary-main mobile-menu'} id={"movie-poll"} active={activeitem === 'movie-poll'} onClick={changeActiveState}>
+                  Movie Poll
+                </Button>
+              </Link>
+            </Menu.Item>
+
           {
             loggedIn ?
 
